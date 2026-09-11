@@ -1,4 +1,5 @@
 const fs = require('fs')
+const path = require('path')
 const archiver = require('archiver')
 const builder = require('electron-builder')
 const Arch = builder.Arch
@@ -25,48 +26,22 @@ async function afterPackageBuilt (packagePath) {
   }
 
   /* create zip files */
-  var output = fs.createWriteStream('dist/app/' + 'Min-v' + version + '-windows' + archSuffix + '.zip')
+  var output = fs.createWriteStream('dist/app/' + 'Liya-Browser-v' + version + '-windows' + archSuffix + '.zip')
   var archive = archiver('zip', {
     zlib: { level: 9 }
   })
-  archive.directory(packagePath, 'Min-v' + version)
+  archive.directory(packagePath, 'Liya-Browser-v' + version)
   archive.pipe(output)
   await archive.finalize()
 
-  /* create installer */
-  const installer = require('electron-installer-windows')
-
-  const options = {
-    src: packagePath,
-    dest: 'dist/app/min-installer' + archSuffix,
-    icon: 'icons/icon256.ico',
-    animation: 'icons/windows-installer.gif',
-    licenseUrl: 'https://github.com/minbrowser/min/blob/master/LICENSE.txt',
-    noMsi: true
-  }
-
-  console.log('Creating package (this may take a while)')
-
-  fs.copyFileSync('LICENSE.txt', packagePath + '/LICENSE')
-
-  await installer(options)
-    .then(function () {
-      fs.renameSync('./dist/app/min-installer' + archSuffix + '/min-' + version + '-setup.exe', './dist/app/min-' + version + archSuffix + '-setup.exe')
-    })
-    .catch(err => {
-      console.error(err, err.stack)
-      process.exit(1)
-    })
+  // electron-builder with 'nsis' target automatically creates the installer in dist/app
+  console.log('NSIS installer and ZIP package created successfully in dist/app')
 }
 
-// creating multiple packages simultaneously causes errors in electron-rebuild, so do one arch at a time instead
+// Build x64 package for Windows
 createPackage('win32', { arch: Arch.x64 })
   .then(afterPackageBuilt)
   .then(function () {
-    return createPackage('win32', { arch: Arch.ia32 })
+    console.log('Liya Browser build completed successfully!')
   })
-  .then(afterPackageBuilt)
-  .then(function () {
-    return createPackage('win32', { arch: Arch.arm64 })
-  })
-  .then(afterPackageBuilt)
+

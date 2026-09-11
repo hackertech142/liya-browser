@@ -5,12 +5,26 @@ var navigationButtons = {
   container: document.getElementById('toolbar-navigation-buttons'),
   backButton: document.getElementById('back-button'),
   forwardButton: document.getElementById('forward-button'),
+  reloadButton: document.getElementById('reload-button'),
   update: function () {
-    if (!tabs.get(tabs.getSelected()).url) {
+    const currentTab = tabs.get(tabs.getSelected())
+    if (!currentTab || !currentTab.url) {
       navigationButtons.backButton.disabled = true
       navigationButtons.forwardButton.disabled = true
+      if (navigationButtons.reloadButton) {
+        navigationButtons.reloadButton.classList.remove('loading')
+      }
       return
     }
+    
+    if (navigationButtons.reloadButton) {
+      if (currentTab.loaded === false) {
+        navigationButtons.reloadButton.classList.add('loading')
+      } else {
+        navigationButtons.reloadButton.classList.remove('loading')
+      }
+    }
+
     webviews.callAsync(tabs.getSelected(), 'canGoBack', function (err, canGoBack) {
       if (err) {
         return
@@ -40,11 +54,17 @@ var navigationButtons = {
       webviews.callAsync(tabs.getSelected(), 'goForward')
     })
 
+    if (navigationButtons.reloadButton) {
+      navigationButtons.reloadButton.addEventListener('click', function () {
+        webviews.callAsync(tabs.getSelected(), 'reload')
+      })
+    }
+
     navigationButtons.container.addEventListener('mouseenter', function () {
       /*
       Prevent scrollbars from showing up when hovering the navigation buttons, if one isn't already shown
       This also works around a chromium bug where a flickering scrollbar is shown during the expanding animation:
-      https://github.com/minbrowser/min/pull/1665#issuecomment-868551126
+      https://github.com/LiyaDev/liya-browser/pull/1665#issuecomment-868551126
       */
       if (navigationButtons.tabsList.scrollWidth <= navigationButtons.tabsList.clientWidth) {
         navigationButtons.tabsList.classList.add('disable-scroll')
@@ -58,6 +78,8 @@ var navigationButtons = {
     tasks.on('tab-selected', this.update)
     webviews.bindEvent('did-navigate', this.update)
     webviews.bindEvent('did-navigate-in-page', this.update)
+    webviews.bindEvent('did-start-loading', this.update)
+    webviews.bindEvent('did-stop-loading', this.update)
   }
 }
 

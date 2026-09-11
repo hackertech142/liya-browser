@@ -3,7 +3,7 @@
 }
 
 /* show the overlay when the searchbar is open or a dialog is visible */
-body.is-edit-mode #overlay,
+body:not(.is-ntp).is-edit-mode #overlay,
 body.is-modal-mode #overlay {
   display: block;
   position: fixed;

@@ -66,11 +66,7 @@ body.windows:not(.separate-titlebar) {
 }
 
 body.windows:not(.separate-titlebar) .windows-caption-buttons {
-  display: flex;
-  position: absolute;
-  top: var(--control-space-top);
-  right: 0;
-  z-index: 10;
+  display: none !important;
 }
 
 .windows-caption-buttons .element {

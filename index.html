@@ -4,10 +4,11 @@
     <meta charset="UTF-8" />
     <meta http-equiv="Content-Security-Policy" content="script-src 'self'" />
 
-    <title>Min</title>
+    <title>Liya Browser</title>
 
     <link rel="stylesheet" href="dist/bundle.css" />
     <link rel="stylesheet" href="ext/icons/iconfont.css" />
+    <link rel="stylesheet" href="css/liya-theme.css" />
   </head>
 
   <body>
@@ -113,40 +114,59 @@
       class="theme-background-color theme-text-color windowDragHandle"
       tabindex="-1"
     >
-    <div id="mac-window-drag-area"></div>
-      <button
-        id="menu-button"
-        class="navbar-action-button i carbon:overflow-menu-vertical"
-        data-label="openMenu"
-        tabindex="-1"
-      ></button>
-      <div id="toolbar-navigation-buttons" hidden>
+      <!-- Top Row: Tabs -->
+      <div id="navbar-top-row">
+        <div id="mac-window-drag-area"></div>
+        <div id="tabs">
+          <div id="tabs-inner" role="tablist" class="has-thin-scrollbar"></div>
           <button
-          id="back-button"
-          class="navbar-action-button i carbon:chevron-left"
-          data-label="goBack"
+            id="add-tab-button"
+            class="navbar-action-button i carbon:add"
+            data-label="newTabAction"
+            tabindex="-1"
+          ></button>
+        </div>
+      </div>
+
+      <!-- Bottom Row: Navigation, Address Bar, Menu -->
+      <div id="navbar-bottom-row">
+        <button
+          id="menu-button"
+          class="navbar-action-button i carbon:overflow-menu-vertical"
+          data-label="openMenu"
           tabindex="-1"
         ></button>
-        <button
-        id="forward-button"
-        class="navbar-action-button i carbon:chevron-right"
-        data-label="goForward"
-        tabindex="-1"
-      ></button>
-      </div>
-      <div id="tabs">
+        
+        <div id="toolbar-navigation-buttons">
+          <button
+            id="back-button"
+            class="navbar-action-button i carbon:chevron-left"
+            data-label="goBack"
+            tabindex="-1"
+            title="Go Back"
+          ></button>
+          <button
+            id="forward-button"
+            class="navbar-action-button i carbon:chevron-right"
+            data-label="goForward"
+            tabindex="-1"
+            title="Go Forward"
+          ></button>
+          <button
+            id="reload-button"
+            class="navbar-action-button i carbon:renew"
+            tabindex="-1"
+            title="Reload Page"
+          ></button>
+        </div>
+        
         <div id="tab-editor" hidden>
           <input id="tab-editor-input" spellcheck="false" />
         </div>
-        <div id="tabs-inner" role="tablist" class="has-thin-scrollbar"></div>
-      </div>
-      <div class="navbar-right-actions">
-        <button
-          id="add-tab-button"
-          class="navbar-action-button i carbon:add"
-          data-label="newTabAction"
-          tabindex="-1"
-        ></button>
+        
+        <div class="navbar-right-actions">
+          <!-- other right actions -->
+        </div>
       </div>
     </div>
 
@@ -202,9 +222,92 @@
       <img id="webview-placeholder" hidden aria-hidden="true" />
       <div id="ntp-content">
           <img id="ntp-background" hidden>
+          <div id="ntp-dashboard">
+            <div class="liya-hero">
+              <div class="liya-clock-container">
+                <div class="liya-clock" id="liya-clock">--:--</div>
+                <div class="liya-date" id="liya-date">-- --, ----</div>
+              </div>
+              <div class="liya-hero-divider"></div>
+              <h1 class="liya-title">LIYA BROWSER</h1>
+              <p class="liya-subtitle">Fast • Private • Minimal Chromium Engine</p>
+            </div>
+
+            <div class="liya-search-container">
+              <div class="liya-search-bar">
+                <i class="i carbon:search search-icon"></i>
+                <input type="text" id="liya-ntp-input" placeholder="Search with Google or enter address" />
+              </div>
+            </div>
+
+            <div class="liya-quick-links" id="liya-quick-links">
+              <!-- Dynamic tiles will be rendered here -->
+              
+              <!-- Add Button Tile -->
+              <div class="liya-tile add-shortcut-btn" id="add-shortcut-btn">
+                <div class="tile-icon add"><i class="i carbon:add"></i></div>
+                <span>Add Shortcut</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Add Shortcut Modal -->
+          <div id="add-shortcut-modal" class="modal-overlay" hidden>
+            <div class="modal-content">
+              <h3>Add shortcut</h3>
+              <div class="modal-input-group">
+                <label for="shortcut-name">Name</label>
+                <input type="text" id="shortcut-name" autocomplete="off">
+              </div>
+              <div class="modal-input-group">
+                <label for="shortcut-url">URL</label>
+                <input type="text" id="shortcut-url" autocomplete="off">
+              </div>
+              <div class="modal-actions">
+                <button id="shortcut-cancel-btn" class="btn-cancel">Cancel</button>
+                <button id="shortcut-save-btn" class="btn-save">Done</button>
+              </div>
+            </div>
+          </div>
+
           <div id="ntp-background-controls">
-            <button id="ntp-image-remove"><i class="i carbon:trash-can"></i></button>
-            <button id="ntp-image-picker"><i class="i carbon:camera"></i></button>
+            <button id="ntp-widgets-toggle" title="Widgets"><i class="i carbon:dashboard"></i></button>
+            <button id="ntp-image-remove" title="Remove Background"><i class="i carbon:trash-can"></i></button>
+            <button id="ntp-image-picker" title="Change Background"><i class="i carbon:camera"></i></button>
+          </div>
+
+          <!-- Widget Sidebar -->
+          <div id="widgets-sidebar" class="widgets-sidebar closed">
+            <div class="widgets-header">
+              <h2>Widgets</h2>
+              <button id="widgets-close-btn"><i class="i carbon:close"></i></button>
+            </div>
+            
+            <div class="widgets-body">
+              <!-- Weather Widget -->
+              <div class="widget-card" id="weather-widget">
+                <h3>Weather</h3>
+                <div class="weather-content" id="weather-content">
+                  <div class="weather-loading">Loading weather...</div>
+                </div>
+              </div>
+
+              <!-- To-Do Widget -->
+              <div class="widget-card" id="todo-widget">
+                <h3>To-Do List</h3>
+                <div class="todo-input-row">
+                  <input type="text" id="todo-input" placeholder="Add a new task..." autocomplete="off">
+                  <button id="todo-add-btn"><i class="i carbon:add"></i></button>
+                </div>
+                <ul id="todo-list" class="todo-list"></ul>
+              </div>
+
+              <!-- Quick Note Widget -->
+              <div class="widget-card" id="note-widget">
+                <h3>Quick Note</h3>
+                <textarea id="note-textarea" placeholder="Type something here... It auto-saves."></textarea>
+              </div>
+            </div>
           </div>
       </div>
     </div>

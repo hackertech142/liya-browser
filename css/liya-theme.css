@@ -1,0 +1,423 @@
+/* 
+  Liya Browser - Ultra-Premium Minimalist Design Theme
+  Clean, flat, Safari/Arc-style aesthetic with soft shadows and no harsh borders.
+*/
+
+:root {
+  --liya-bg-light: #f9fafb;
+  --liya-surface: #ffffff;
+  --liya-surface-hover: #f3f4f6;
+  --liya-glass-bg: rgba(255, 255, 255, 0.85);
+  --liya-glass-border: rgba(0, 0, 0, 0.05);
+  --liya-accent-indigo: #000000; /* Minimalist black instead of indigo */
+  --liya-accent-gradient: #ffffff; /* Clean white active tab */
+  --liya-accent-glow: rgba(0, 0, 0, 0.08);
+  --liya-text-main: #111827;
+  --liya-text-muted: #6b7280;
+  --liya-radius: 8px; /* Slightly sharper, modern radius */
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+  background-color: var(--liya-bg-light) !important;
+  color: var(--liya-text-main) !important;
+}
+
+/* Custom Navigation Bar & Header Styling (Chrome-style 2-row) */
+#navbar {
+  display: flex !important;
+  flex-direction: column !important;
+  height: 80px !important; /* 40px top + 40px bottom */
+  padding: 0 !important;
+  background: var(--liya-bg-light) !important; /* Window background color for tabs area */
+  border-bottom: 1px solid var(--liya-glass-border) !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02) !important;
+}
+
+#navbar-top-row {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: flex-end !important;
+  height: 40px !important;
+  background: transparent !important;
+  padding: 0 8px 0 80px !important; /* 80px left padding for mac traffic lights / window drag area */
+  width: 100% !important;
+}
+
+#navbar-bottom-row {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  height: 40px !important;
+  background: var(--liya-surface) !important;
+  padding: 0 8px !important;
+  width: 100% !important;
+  border-radius: 8px 8px 0 0 !important;
+  box-shadow: 0 -1px 4px rgba(0, 0, 0, 0.02) !important;
+  position: relative !important;
+  z-index: 5 !important;
+}
+
+#navbar #tabs {
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: row !important;
+  height: 100% !important;
+  align-items: flex-end !important; /* Tabs sit on the bottom edge */
+  justify-content: flex-start !important; /* align content to the left */
+}
+
+#navbar #tabs-inner {
+  display: flex !important;
+  flex: 0 1 auto !important; /* Only take up space needed by the tabs, don't expand */
+  flex-direction: row !important;
+  align-items: flex-end !important;
+  height: 100% !important;
+  padding-bottom: 4px !important;
+}
+
+#navbar #tabs #add-tab-button {
+  align-self: center !important;
+  margin-left: 6px !important;
+  margin-bottom: 2px !important;
+  width: 28px !important;
+  height: 28px !important;
+}
+
+#navbar #tab-editor {
+  flex: 1 !important;
+  display: flex !important;
+  align-items: center !important;
+  margin: 0 16px !important;
+  position: static !important; /* Reset absolute positioning */
+  transform: none !important; /* Disable any js sliding animations */
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+#navbar #tab-editor[hidden] {
+  display: flex !important; /* Force it to always be visible even if JS tries to hide it */
+}
+
+#tab-editor-input {
+  width: 100% !important;
+  height: 28px !important;
+  background: var(--liya-surface-hover) !important;
+  border: 1px solid var(--liya-glass-border) !important;
+  border-radius: 14px !important;
+  padding: 0 16px !important;
+  color: var(--liya-text-main) !important;
+  font-size: 13px !important;
+  outline: none !important;
+  transition: all 0.2s ease !important;
+}
+
+#tab-editor-input:focus {
+  background: var(--liya-surface) !important;
+  box-shadow: 0 0 0 2px var(--liya-glass-border) !important;
+}
+
+/* Ensure navbar action buttons are high contrast & visible */
+.navbar-action-button, 
+#menu-button, 
+#switch-task-button {
+  color: var(--liya-text-muted) !important;
+  opacity: 1 !important;
+}
+
+.navbar-action-button:hover, 
+#menu-button:hover, 
+#switch-task-button:hover {
+  color: var(--liya-text-main) !important;
+  background: var(--liya-surface-hover) !important;
+}
+
+/* Navigation Buttons Container & Reload Button */
+#toolbar-navigation-buttons, 
+body.is-edit-mode #toolbar-navigation-buttons {
+  display: flex !important;
+  align-items: center !important;
+  gap: 2px !important;
+  padding: 0 8px !important;
+  width: auto !important;
+  overflow: visible !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+#toolbar-navigation-buttons button,
+#back-button,
+#forward-button,
+#reload-button {
+  width: 28px !important;
+  height: 28px !important;
+  min-width: 28px !important;
+  border-radius: 6px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: transparent !important;
+  color: var(--liya-text-muted) !important;
+  border: none !important;
+  transition: all 0.15s ease !important;
+  cursor: pointer !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+#toolbar-navigation-buttons button svg,
+#reload-button svg {
+  stroke: var(--liya-text-muted) !important;
+}
+
+#toolbar-navigation-buttons button:hover:not(:disabled),
+#back-button:hover:not(:disabled),
+#forward-button:hover:not(:disabled),
+#reload-button:hover:not(:disabled) {
+  background: var(--liya-surface-hover) !important;
+  color: var(--liya-text-main) !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+#toolbar-navigation-buttons button:hover:not(:disabled) svg,
+#reload-button:hover:not(:disabled) svg {
+  stroke: var(--liya-text-main) !important;
+}
+
+#toolbar-navigation-buttons button:disabled,
+#back-button:disabled,
+#forward-button:disabled {
+  opacity: 0.3 !important;
+  cursor: default !important;
+  background: transparent !important;
+}
+
+/* Tab Bar Styling */
+.tab-item {
+  border-radius: var(--liya-radius) !important;
+  transition: all 0.15s ease !important;
+  background: transparent !important;
+  border: none !important;
+  color: var(--liya-text-muted) !important;
+  margin: 4px 2px !important;
+  font-weight: 500 !important;
+}
+
+.tab-item .title, 
+.tab-item .tab-icon {
+  color: var(--liya-text-muted) !important;
+}
+
+.tab-item:hover {
+  background: var(--liya-surface-hover) !important;
+  color: var(--liya-text-main) !important;
+}
+
+.tab-item.active {
+  background: var(--liya-surface) !important;
+  color: var(--liya-text-main) !important;
+  font-weight: 600 !important;
+  box-shadow: 0 2px 8px var(--liya-accent-glow) !important;
+  border: 1px solid var(--liya-glass-border) !important;
+}
+
+.tab-item.active .tab-icon, 
+.tab-item.active .title,
+.tab-item.active .url-element {
+  color: var(--liya-text-main) !important;
+}
+
+/* New Tab Plus Button */
+#add-tab-button, .add-tab-button {
+  border-radius: 6px !important;
+  background: transparent !important;
+  color: var(--liya-text-muted) !important;
+  border: none !important;
+  transition: all 0.15s ease !important;
+  opacity: 1 !important;
+}
+
+#add-tab-button:hover, .add-tab-button:hover {
+  background: var(--liya-surface-hover) !important;
+  color: var(--liya-text-main) !important;
+  box-shadow: none !important;
+}
+
+/* Search Box Container (Glassmorphic Light Bar) */
+#searchbar, .searchbar {
+  background: var(--liya-glass-bg) !important;
+  backdrop-filter: blur(20px) !important;
+  border: 1px solid var(--liya-glass-border) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04) !important;
+  color: var(--liya-text-main) !important;
+}
+
+#search-input {
+  color: var(--liya-text-main) !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+}
+
+#search-input::placeholder {
+  color: var(--liya-text-muted) !important;
+}
+
+/* Search Suggestions & Results */
+.search-item {
+  border-radius: 10px !important;
+  padding: 8px 12px !important;
+  transition: background 0.15s ease !important;
+  color: #0f172a !important;
+}
+
+.search-item:hover, .search-item.selected {
+  background: rgba(79, 70, 229, 0.1) !important;
+  color: #4f46e5 !important;
+}
+
+.search-item.selected .title {
+  color: #4f46e5 !important;
+  font-weight: 600 !important;
+}
+
+/* Task Overlay & Start Page */
+#task-overlay, .task-overlay {
+  background: radial-gradient(circle at top right, rgba(99, 102, 241, 0.12), rgba(248, 250, 252, 0.98)) !important;
+  background-attachment: fixed !important;
+  background-size: cover !important;
+  background-repeat: no-repeat !important;
+  backdrop-filter: blur(30px) !important;
+  min-height: 100vh !important;
+}
+
+/* Windows Caption Controls */
+.windows-caption-buttons .element {
+  color: #1e293b !important;
+}
+
+/* Custom Scrollbar for Liya Browser */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(241, 245, 249, 0.8);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(79, 70, 229, 0.3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--liya-accent-indigo);
+}
+
+/* Fix tabs disappearing when address bar is focused (Chrome layout) */
+.is-edit-mode .tab-item,
+body.is-edit-mode .tab-item {
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: flex !important;
+}
+
+.is-edit-mode #navbar #tabs-inner,
+body.is-edit-mode #navbar #tabs-inner {
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: flex !important;
+}
+
+/* Ensure tabs take up proper space */
+.tab-item {
+  min-width: 150px !important;
+  max-width: 240px !important;
+}
+
+/* Force window caption buttons (minimize, maximize, close) to NEVER turn white */
+.windows-caption-buttons .element {
+  color: #1e293b !important;
+  stroke: #1e293b !important;
+}
+
+body.dark-theme .windows-caption-buttons .element,
+body.theme-text-light .windows-caption-buttons .element {
+  color: #1e293b !important;
+  stroke: #1e293b !important;
+}
+
+/* Ensure reload button is visible */
+#reload-button {
+  display: inline-flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Reload button loading animation */
+@keyframes liya-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+#reload-button.loading svg {
+  animation: liya-spin 1s linear infinite;
+  stroke: #4f46e5 !important; /* Premium Indigo */
+}
+
+/* Clear Browsing Data Modal */
+#clear-data-modal {
+  width: 400px;
+  padding: 25px;
+  background: var(--liya-surface);
+  border: 1px solid var(--liya-border);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+#clear-data-modal .clear-data-options {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin: 20px 0;
+}
+#clear-data-modal label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: var(--liya-text);
+  cursor: pointer;
+}
+#clear-data-modal input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #4f46e5;
+  cursor: pointer;
+}
+#clear-data-modal .clear-data-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+#clear-data-modal button {
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: none;
+  background: var(--liya-surface-hover);
+  color: var(--liya-text);
+  cursor: pointer;
+  font-weight: 500;
+}
+#clear-data-modal button.primary-button {
+  background: #ef4444; /* Red color for destructive action */
+  color: white;
+}
+#clear-data-modal button:hover {
+  filter: brightness(0.9);
+}
+#clear-data-modal button.primary-button:hover {
+  background: #dc2626;
+}

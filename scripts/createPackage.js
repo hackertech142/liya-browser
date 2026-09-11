@@ -98,7 +98,7 @@ module.exports = function (platform, extraOptions) {
       ]
     },
     win: {
-      target: 'dir',
+      target: 'nsis',
       icon: 'icons/icon256.ico'
     },
     mac: {
@@ -120,7 +120,7 @@ module.exports = function (platform, extraOptions) {
           }
         ],
         NSUserActivityTypes: ['NSUserActivityTypeBrowsingWeb'], // macOS handoff support
-        LSFileQuarantineEnabled: true // https://github.com/minbrowser/min/issues/2073
+        LSFileQuarantineEnabled: true // https://github.com/LiyaDev/liya-browser/issues/2073
         // need to revisit if implementing autoupdate, see https://github.com/brave/browser-laptop/issues/13817
       }
     },
@@ -138,7 +138,7 @@ module.exports = function (platform, extraOptions) {
         schemes: ['file']
       }
     ],
-    asar: false,
+    asar: true,
     afterPack: afterPack,
     publish: null,
     /*
@@ -152,7 +152,7 @@ module.exports = function (platform, extraOptions) {
 
   const target = (function () {
     if (platform == 'win32') {
-      return Platform.WINDOWS.createTarget(['dir'], extraOptions.arch)
+      return Platform.WINDOWS.createTarget(['nsis'], extraOptions.arch)
     } else if (platform == 'linux') {
       return Platform.LINUX.createTarget(['dir'], extraOptions.arch)
     } else if (platform == 'mac') {

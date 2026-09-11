@@ -1,3 +1,4 @@
+const { ipcRenderer } = require('electron')
 var searchbar = require('searchbar/searchbar.js')
 var searchbarPlugins = require('searchbar/searchbarPlugins.js')
 var searchbarUtils = require('searchbar/searchbarUtils.js')
@@ -5,6 +6,7 @@ var bangsPlugin = require('searchbar/bangsPlugin.js')
 var places = require('places/places.js')
 var urlParser = require('util/urlParser.js')
 var formatRelativeDate = require('util/relativeDate.js')
+var clearDataModal = require('clearDataModal.js')
 
 module.exports = {
   initialize: function () {
@@ -22,23 +24,14 @@ module.exports = {
 
         // show clear button
 
-        if (text === '' && results.length > 0) {
+        if (text === '') {
           var clearButton = document.createElement('button')
           clearButton.className = 'searchbar-floating-button'
-          clearButton.textContent = l('clearHistory')
+          clearButton.textContent = 'Clear Browsing Data'
           container.appendChild(clearButton)
 
           clearButton.addEventListener('click', function () {
-            if (confirm(l('clearHistoryConfirmation'))) {
-              places.deleteAllHistory()
-              ipc.invoke('clearStorageData')
-
-              // hacky way to refresh the list
-              // TODO make a better api for this
-              setTimeout(function () {
-                searchbarPlugins.run('!history ' + text, input, null)
-              }, 200)
-            }
+            clearDataModal.show()
           })
         }
 
@@ -51,7 +44,18 @@ module.exports = {
         results.sort(function (a, b) {
           // order by last visit
           return b.lastVisit - a.lastVisit
-        }).slice(0, 1000).forEach(function (result, index) {
+        })
+
+        if (results.length === 0) {
+          var emptyState = document.createElement('div')
+          emptyState.className = 'searchbar-item'
+          emptyState.innerHTML = '<span class="title">No browsing history found</span>'
+          emptyState.style.opacity = '0.5'
+          emptyState.style.pointerEvents = 'none'
+          container.appendChild(emptyState)
+        }
+
+        results.slice(0, 1000).forEach(function (result, index) {
           var thisRelativeDate = formatRelativeDate(result.lastVisit)
           if (thisRelativeDate !== lastRelativeDate) {
             searchbarPlugins.addHeading('bangs', { text: thisRelativeDate })

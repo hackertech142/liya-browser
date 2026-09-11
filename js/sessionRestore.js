@@ -80,15 +80,13 @@ const sessionRestore = {
     */
 
     try {
-      // first run, show the tour
+      // first run, show search bar for Liya Browser
       if (!savedStringData) {
         tasks.setSelected(tasks.add()) // create a new task
 
-        var newTab = tasks.getSelected().tabs.add({
-            url: 'https://minbrowser.github.io/min/tour'
-        })
+        var newTab = tasks.getSelected().tabs.add()
         browserUI.addTab(newTab, {
-         enterEditMode: false
+          enterEditMode: true
         })
         return
       }
@@ -146,7 +144,7 @@ const sessionRestore = {
       /* Disabled - show user survey
       // if this isn't the first run, and the survey popup hasn't been shown yet, show it
       if (shouldShowSurvey) {
-        fetch('https://minbrowser.org/survey/survey15.json').then(function (response) {
+        fetch('https://liya-browser.org/survey/survey15.json').then(function (response) {
           return response.json()
         }).then(function (data) {
           setTimeout(function () {

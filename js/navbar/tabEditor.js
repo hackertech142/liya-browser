@@ -37,7 +37,7 @@ const tabEditor = {
     if (!editingValue) {
       tabEditor.input.select()
     }
-    // https://github.com/minbrowser/min/discussions/1506
+    // https://github.com/LiyaDev/liya-browser/discussions/1506
     tabEditor.input.scrollLeft = 0
 
     searchbar.show(tabEditor.input)
@@ -71,15 +71,8 @@ const tabEditor = {
     }
   },
   hide: function () {
-    tabEditor.container.hidden = true
-    tabEditor.container.removeAttribute('style')
-    tabEditor.isShown = false
-
     tabEditor.input.blur()
     searchbar.hide()
-
-    document.body.classList.remove('is-edit-mode')
-
     webviews.hidePlaceholder('editMode')
   },
   initialize: function () {

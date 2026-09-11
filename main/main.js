@@ -20,13 +20,13 @@ const {
 } = electron
 
 crashReporter.start({
-  submitURL: 'https://minbrowser.org/',
+  submitURL: 'https://liya-browser.org/',
   uploadToServer: false,
   compress: true
 })
 
 if (process.argv.some(arg => arg === '-v' || arg === '--version')) {
-  console.log('Min: ' + app.getVersion())
+  console.log('Liya Browser: ' + app.getVersion())
   console.log('Chromium: ' + process.versions.chrome)
   process.exit()
 }
@@ -174,8 +174,8 @@ function createWindow (customArgs = {}) {
   }
 
   // make the bounds fit inside a currently-active screen
-  // (since the screen Min was previously open on could have been removed)
-  // see: https://github.com/minbrowser/min/issues/904
+  // (since the screen Liya was previously open on could have been removed)
+  // see: https://github.com/LiyaDev/liya-browser/issues/904
   var containingRect = electron.screen.getDisplayMatching(bounds).workArea
 
   bounds = {
@@ -198,6 +198,11 @@ function createWindowWithBounds (bounds, customArgs) {
     minWidth: (process.platform === 'win32' ? 400 : 320), // controls take up more horizontal space on Windows
     minHeight: 350,
     titleBarStyle: settings.get('useSeparateTitlebar') ? 'default' : 'hidden',
+    titleBarOverlay: (process.platform === 'win32' && !settings.get('useSeparateTitlebar')) ? {
+      color: '#f9fafb',
+      symbolColor: '#777777',
+      height: 36
+    } : false,
     trafficLightPosition: { x: 12, y: 10 },
     icon: __dirname + '/icons/icon256.png',
     frame: settings.get('useSeparateTitlebar'),
@@ -306,7 +311,7 @@ function createWindowWithBounds (bounds, customArgs) {
 
   newWin.on('leave-full-screen', function () {
     sendIPCToWindow(newWin, 'leave-full-screen')
-    // https://github.com/minbrowser/min/issues/1093
+    // https://github.com/LiyaDev/liya-browser/issues/1093
     newWin.setMenuBarVisibility(false)
   })
 
@@ -316,7 +321,7 @@ function createWindowWithBounds (bounds, customArgs) {
 
   newWin.on('leave-html-full-screen', function () {
     sendIPCToWindow(newWin, 'leave-html-full-screen')
-    // https://github.com/minbrowser/min/issues/952
+    // https://github.com/LiyaDev/liya-browser/issues/952
     newWin.setMenuBarVisibility(false)
   })
 
@@ -371,7 +376,7 @@ app.on('ready', function () {
   const newWin = createWindow()
 
   getWindowWebContents(newWin).on('did-finish-load', function () {
-    // if a URL was passed as a command line argument (probably because Min is set as the default browser on Linux), open it.
+    // if a URL was passed as a command line argument (probably because Liya is set as the default browser on Linux), open it.
     handleCommandLineArguments(process.argv)
 
     // there is a URL from an "open-url" event (on Mac)
@@ -487,7 +492,7 @@ ipc.on('request-tab-state', function(e) {
 
 /* places service */
 
-const placesPage = 'file://' + __dirname + '/js/places/placesService.html'
+const placesPage = 'min://app/js/places/placesService.html'
 
 let placesWindow = null
 app.once('ready', function() {

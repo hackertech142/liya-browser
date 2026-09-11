@@ -1,9 +1,9 @@
 {
-  "name": "min",
-  "productName": "Min",
-  "author": "PalmerAL",
-  "version": "1.35.6",
-  "description": "A fast, minimal browser that protects your privacy",
+  "name": "liya-browser",
+  "productName": "Liya Browser",
+  "author": "Liya Dev Team",
+  "version": "1.0.0",
+  "description": "A fast, modern, sleek and private Chromium-based web browser",
   "electronVersion": "42.6.0",
   "main": "main.build.js",
   "standard": {
@@ -16,6 +16,7 @@
       "throttle",
       "debounce",
       "empty",
+
       "alert",
       "confirm",
       "requestAnimationFrame",
@@ -33,7 +34,7 @@
     "@electron/fuses": "^1.7.0",
     "chokidar": "^3.6.0",
     "dexie": "^3.0.3",
-    "dragula": "github:minbrowser/dragula",
+    "dragula": "github:liya-browser/dragula",
     "electron-squirrel-startup": "^1.0.0",
     "expr-eval": "^2.0.2",
     "node-abi": "^3.8.0",
@@ -86,6 +87,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/minbrowser/min.git"
+    "url": "https://github.com/LiyaDev/liya-browser.git"
   }
 }

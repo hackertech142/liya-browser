@@ -127,7 +127,7 @@ const webviews = {
   },
   emitEvent: function (event, tabId, args) {
     if (!webviews.hasViewForTab(tabId)) {
-      // the view could have been destroyed between when the event was occured and when it was recieved in the UI process, see https://github.com/minbrowser/min/issues/604#issuecomment-419653437
+      // the view could have been destroyed between when the event was occured and when it was recieved in the UI process, see https://github.com/LiyaDev/liya-browser/issues/604#issuecomment-419653437
       return
     }
     webviews.events.forEach(function (ev) {
@@ -159,9 +159,9 @@ const webviews = {
       }
     } else {
       if (!hasSeparateTitlebar && (window.platformType === 'linux' || window.platformType === 'windows') && !windowIsMaximized && !windowIsFullscreen) {
-        var navbarHeight = 48
+        var navbarHeight = 92 // 80px (new 2-row navbar) + 12px control space
       } else {
-        var navbarHeight = 36
+        var navbarHeight = 80 // 80px (new 2-row navbar)
       }
 
       const viewMargins = webviews.viewMargins
@@ -208,7 +208,7 @@ const webviews = {
       if (tabData.url) {
         ipc.send('loadURLInView', { id: tabData.id, url: urlParser.parse(tabData.url) })
       } else if (tabData.private) {
-        // workaround for https://github.com/minbrowser/min/issues/872
+        // workaround for https://github.com/LiyaDev/liya-browser/issues/872
         ipc.send('loadURLInView', { id: tabData.id, url: urlParser.parse('min://newtab') })
       }
     }
@@ -500,7 +500,7 @@ ipc.on('async-call-result', function (e, args) {
 
 ipc.on('view-ipc', function (e, args) {
   if (!webviews.hasViewForTab(args.id)) {
-    // the view could have been destroyed between when the event was occured and when it was recieved in the UI process, see https://github.com/minbrowser/min/issues/604#issuecomment-419653437
+    // the view could have been destroyed between when the event was occured and when it was recieved in the UI process, see https://github.com/LiyaDev/liya-browser/issues/604#issuecomment-419653437
     return
   }
   webviews.IPCEvents.forEach(function (item) {

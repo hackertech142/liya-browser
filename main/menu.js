@@ -422,25 +422,25 @@ function buildAppMenu (options = {}) {
         {
           label: l('appMenuKeyboardShortcuts'),
           click: function () {
-            openTabInWindow('https://github.com/minbrowser/min/wiki#keyboard-shortcuts')
+            openTabInWindow('https://github.com/hackertech142/liya-ai-workstation')
           }
         },
         {
           label: l('appMenuReportBug'),
           click: function () {
-            openTabInWindow('https://github.com/minbrowser/min/issues/new')
+            openTabInWindow('https://github.com/hackertech142/liya-ai-workstation/issues/new')
           }
         },
         {
           label: l('appMenuTakeTour'),
           click: function () {
-            openTabInWindow('https://minbrowser.github.io/min/tour/')
+            openTabInWindow('https://github.com/hackertech142/liya-ai-workstation')
           }
         },
         {
           label: l('appMenuViewGithub'),
           click: function () {
-            openTabInWindow('https://github.com/minbrowser/min')
+            openTabInWindow('https://github.com/hackertech142/liya-ai-workstation')
           }
         },
         ...(process.platform !== 'darwin' ? [{ type: 'separator' }] : []),
@@ -448,7 +448,7 @@ function buildAppMenu (options = {}) {
           label: l('appMenuAbout').replace('%n', app.name),
           click: function (item, window) {
             var info = [
-              'Min v' + app.getVersion(),
+              'Liya Browser v' + app.getVersion(),
               'Chromium v' + process.versions.chrome
             ]
             electron.dialog.showMessageBox({

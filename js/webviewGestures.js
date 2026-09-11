@@ -2,30 +2,28 @@ var webviews = require('webviews.js')
 
 var webviewGestures = {
   showBackArrow: function () {
-    // this is temporarily disabled until we find a way to make it work with BrowserViews
-    return
     var backArrow = document.getElementById('leftArrowContainer')
-    backArrow.classList.toggle('shown')
-    backArrow.classList.toggle('animating')
+    if (!backArrow) return
+    backArrow.classList.add('shown')
+    backArrow.classList.add('animating')
     setTimeout(function () {
-      backArrow.classList.toggle('shown')
-    }, 600)
+      backArrow.classList.remove('shown')
+    }, 400)
     setTimeout(function () {
-      backArrow.classList.toggle('animating')
-    }, 900)
+      backArrow.classList.remove('animating')
+    }, 700)
   },
   showForwardArrow: function () {
-    // this is temporarily disabled until we find a way to make it work with BrowserViews
-    return
     var forwardArrow = document.getElementById('rightArrowContainer')
-    forwardArrow.classList.toggle('shown')
-    forwardArrow.classList.toggle('animating')
+    if (!forwardArrow) return
+    forwardArrow.classList.add('shown')
+    forwardArrow.classList.add('animating')
     setTimeout(function () {
-      forwardArrow.classList.toggle('shown')
-    }, 600)
+      forwardArrow.classList.remove('shown')
+    }, 400)
     setTimeout(function () {
-      forwardArrow.classList.toggle('animating')
-    }, 900)
+      forwardArrow.classList.remove('animating')
+    }, 700)
   },
   zoomWebviewBy: function (tabId, amt) {
     webviews.callAsync(tabId, 'zoomFactor', function (err, oldFactor) {
@@ -87,34 +85,41 @@ function resetScrollCounters () {
 }
 
 function onSwipeGestureLowVelocity () {
-  //we can't detect scroll position in an iframe, so never trigger a back gesture from it
   if (isInFrame) {
     return
   }
 
-  webviews.callAsync(tabs.getSelected(), 'getZoomFactor', function(err, result) {
-    const minScrollDistance = 150 * result;
+  const selectedTab = tabs.getSelected()
+  if (!selectedTab) return
 
-      if ((leftMouseMove / rightMouseMove > 5) || (rightMouseMove / leftMouseMove > 5)) {
-      // swipe to the left to go forward
-      if (leftMouseMove - beginningScrollRight > minScrollDistance && Math.abs(horizontalMouseMove / verticalMouseMove) > 3) {
-        if (beginningScrollRight < 5) {
+  const ratio = Math.abs(horizontalMouseMove / (verticalMouseMove || 1))
+  if (ratio > 1.0) {
+    // swipe left (leftMouseMove) to go forward
+    if (leftMouseMove > 35 && (beginningScrollRight === null || beginningScrollRight < 100)) {
+      webviews.callAsync(selectedTab, 'canGoForward', function (err, canGoForward) {
+        if (canGoForward) {
           resetDistanceCounters()
           resetScrollCounters()
-          webviews.callAsync(tabs.getSelected(), 'goForward')
+          webviewGestures.showForwardArrow()
+          webviews.callAsync(selectedTab, 'goForward')
         }
-      }
-
-      // swipe to the right to go backwards
-      if (rightMouseMove + beginningScrollLeft > minScrollDistance && Math.abs(horizontalMouseMove / verticalMouseMove) > 3) {
-        if (beginningScrollLeft < 5) {
-          resetDistanceCounters()
-          resetScrollCounters()
-          webviews.goBackIgnoringRedirects(tabs.getSelected())
-        }
-      }
+      })
+      return
     }
-  })
+
+    // swipe right (rightMouseMove) to go back
+    if (rightMouseMove > 35 && (beginningScrollLeft === null || beginningScrollLeft < 100)) {
+      webviews.callAsync(selectedTab, 'canGoBack', function (err, canGoBack) {
+        if (canGoBack) {
+          resetDistanceCounters()
+          resetScrollCounters()
+          webviewGestures.showBackArrow()
+          webviews.goBackIgnoringRedirects(selectedTab)
+        }
+      })
+      return
+    }
+  }
 }
 
 webviews.bindIPC('wheel-event', function (tabId, e) {

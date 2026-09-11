@@ -78,20 +78,31 @@ ipc.handle('clearStorageData', function () {
 
 ipc.handle('minimize', function (e) {
   windows.windowFromContents(e.sender).win.minimize()
-  // workaround for https://github.com/minbrowser/min/issues/1662
+  // workaround for https://github.com/LiyaDev/liya-browser/issues/1662
   e.sender.send('minimize')
 })
 
 ipc.handle('maximize', function (e) {
   windows.windowFromContents(e.sender).win.maximize()
-  // workaround for https://github.com/minbrowser/min/issues/1662
+  // workaround for https://github.com/LiyaDev/liya-browser/issues/1662
   e.sender.send('maximize')
 })
 
 ipc.handle('unmaximize', function (e) {
-  windows.windowFromContents(e.sender).win.unmaximize()
-  // workaround for https://github.com/minbrowser/min/issues/1662
-  e.sender.send('unmaximize')
+  var win = windows.windowFromContents(e.sender).win;
+  win.unmaximize();
+  if (win.isMaximized()) {
+    win.restore(); // Fallback if unmaximize fails
+  }
+  
+  // Force it to be a nice centered window instead of half-screen
+  setTimeout(() => {
+    win.setContentSize(900, 700);
+    win.center();
+  }, 10);
+  
+  // workaround for https://github.com/LiyaDev/liya-browser/issues/1662
+  e.sender.send('unmaximize');
 })
 
 ipc.handle('close', function (e) {

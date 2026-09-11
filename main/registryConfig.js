@@ -3,108 +3,108 @@ var regedit = require('regedit')
 var installPath = process.execPath
 
 var keysToCreate = [
-  'HKCU\\Software\\Classes\\Min',
-  'HKCU\\Software\\Classes\\Min\\Application',
-  'HKCU\\Software\\Classes\\Min\\DefaulIcon',
-  'HKCU\\Software\\Classes\\Min\\shell\\open\\command',
-  'HKCU\\Software\\Clients\\StartMenuInternet\\Min\\Capabilities\\FileAssociations',
-  'HKCU\\Software\\Clients\\StartMenuInternet\\Min\\Capabilities\\StartMenu',
-  'HKCU\\Software\\Clients\\StartMenuInternet\\Min\\Capabilities\\URLAssociations',
-  'HKCU\\Software\\Clients\\StartMenuInternet\\Min\\DefaultIcon',
-  'HKCU\\Software\\Clients\\StartMenuInternet\\Min\\InstallInfo',
-  'HKCU\\Software\\Clients\\StartMenuInternet\\Min\\shell\\open\\command'
+  'HKCU\\Software\\Classes\\Liya',
+  'HKCU\\Software\\Classes\\Liya\\Application',
+  'HKCU\\Software\\Classes\\Liya\\DefaulIcon',
+  'HKCU\\Software\\Classes\\Liya\\shell\\open\\command',
+  'HKCU\\Software\\Clients\\StartMenuInternet\\Liya\\Capabilities\\FileAssociations',
+  'HKCU\\Software\\Clients\\StartMenuInternet\\Liya\\Capabilities\\StartMenu',
+  'HKCU\\Software\\Clients\\StartMenuInternet\\Liya\\Capabilities\\URLAssociations',
+  'HKCU\\Software\\Clients\\StartMenuInternet\\Liya\\DefaultIcon',
+  'HKCU\\Software\\Clients\\StartMenuInternet\\Liya\\InstallInfo',
+  'HKCU\\Software\\Clients\\StartMenuInternet\\Liya\\shell\\open\\command'
 ]
 
 var registryConfig = {
   'HKCU\\Software\\RegisteredApplications': {
-    Min: {
-      value: 'Software\\Clients\\StartMenuInternet\\Min\\Capabilities',
+    Liya: {
+      value: 'Software\\Clients\\StartMenuInternet\\Liya\\Capabilities',
       type: 'REG_SZ'
     }
   },
-  'HKCU\\Software\\Classes\\Min': {
+  'HKCU\\Software\\Classes\\Liya': {
     default: {
-      value: 'Min Browser Document',
+      value: 'Liya Browser Document',
       type: 'REG_DEFAULT'
     }
   },
-  'HKCU\\Software\\Classes\\Min\\Application': {
+  'HKCU\\Software\\Classes\\Liya\\Application': {
     ApplicationIcon: {
       value: installPath + ',0',
       type: 'REG_SZ'
     },
     ApplicationName: {
-      value: 'Min',
+      value: 'Liya',
       type: 'REG_SZ'
     },
     AppUserModelId: {
-      value: 'Min',
+      value: 'Liya',
       type: 'REG_SZ'
     }
   },
-  'HKCU\\Software\\Classes\\Min\\DefaulIcon': {
+  'HKCU\\Software\\Classes\\Liya\\DefaulIcon': {
     ApplicationIcon: {
       value: installPath + ',0',
       type: 'REG_SZ'
     }
   },
-  'HKCU\\Software\\Classes\\Min\\shell\\open\\command': {
+  'HKCU\\Software\\Classes\\Liya\\shell\\open\\command': {
     default: {
       value: '"' + installPath + '" "%1"',
       type: 'REG_DEFAULT'
     }
   },
   'HKCU\\Software\\Classes\\.htm\\OpenWithProgIds': {
-    Min: {
+    Liya: {
       value: 'Empty',
       type: 'REG_SZ'
     }
   },
   'HKCU\\Software\\Classes\\.html\\OpenWithProgIds': {
-    Min: {
+    Liya: {
       value: 'Empty',
       type: 'REG_SZ'
     }
   },
-  'HKCU\\Software\\Clients\\StartMenuInternet\\Min\\Capabilities\\FileAssociations': {
+  'HKCU\\Software\\Clients\\StartMenuInternet\\Liya\\Capabilities\\FileAssociations': {
     '.htm': {
-      value: 'Min',
+      value: 'Liya',
       type: 'REG_SZ'
     },
     '.html': {
-      value: 'Min',
+      value: 'Liya',
       type: 'REG_SZ'
     }
   },
-  'HKCU\\Software\\Clients\\StartMenuInternet\\Min\\Capabilities\\StartMenu': {
+  'HKCU\\Software\\Clients\\StartMenuInternet\\Liya\\Capabilities\\StartMenu': {
     StartMenuInternet: {
-      value: 'Min',
+      value: 'Liya',
       type: 'REG_SZ'
     }
   },
-  'HKCU\\Software\\Clients\\StartMenuInternet\\Min\\Capabilities\\URLAssociations': {
+  'HKCU\\Software\\Clients\\StartMenuInternet\\Liya\\Capabilities\\URLAssociations': {
     http: {
-      value: 'Min',
+      value: 'Liya',
       type: 'REG_SZ'
     },
     https: {
-      value: 'Min',
+      value: 'Liya',
       type: 'REG_SZ'
     }
   },
-  'HKCU\\Software\\Clients\\StartMenuInternet\\Min\\DefaultIcon': {
+  'HKCU\\Software\\Clients\\StartMenuInternet\\Liya\\DefaultIcon': {
     default: {
       value: installPath + ',0',
       type: 'REG_DEFAULT'
     }
   },
-  'HKCU\\Software\\Clients\\StartMenuInternet\\Min\\InstallInfo': {
+  'HKCU\\Software\\Clients\\StartMenuInternet\\Liya\\InstallInfo': {
     IconsVisible: {
       value: 1,
       type: 'REG_DWORD'
     }
   },
-  'HKCU\\Software\\Clients\\StartMenuInternet\\Min\\shell\\open\\command': {
+  'HKCU\\Software\\Clients\\StartMenuInternet\\Liya\\shell\\open\\command': {
     default: {
       value: installPath,
       type: 'REG_DEFAULT'
