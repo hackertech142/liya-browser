@@ -23,7 +23,7 @@ Liya Browser is a fast, modern, sleek, and private Chromium-based web browser de
 
 1. **Clone the repository:**
    ```bash
-   git clone <your-github-repo-url>
+   git clone https://github.com/hackertech142/liya-browser.git
    cd liya-browser
    ```
 
