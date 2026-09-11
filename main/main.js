@@ -492,7 +492,7 @@ ipc.on('request-tab-state', function(e) {
 
 /* places service */
 
-const placesPage = 'min://app/js/places/placesService.html'
+const placesPage = 'file://' + __dirname + '/js/places/placesService.html'
 
 let placesWindow = null
 app.once('ready', function() {

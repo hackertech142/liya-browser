@@ -61,7 +61,7 @@ module.exports = function (platform, extraOptions) {
 
     await flipFuses(electronBinaryPath, {
       version: FuseVersion.V1,
-      [FuseV1Options.GrantFileProtocolExtraPrivileges]: false
+      [FuseV1Options.GrantFileProtocolExtraPrivileges]: true
     })
   }
 
