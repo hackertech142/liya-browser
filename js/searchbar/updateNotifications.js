@@ -1,4 +1,4 @@
-const UPDATE_URL = 'https://liya-browser.org/min/updates/latestVersion.json'
+const UPDATE_URL = '' // Disabled for privacy
 
 var settings = require('util/settings/settings.js')
 

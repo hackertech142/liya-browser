@@ -4,6 +4,7 @@
   transition: 0.2s background-color;
   width: 100%;
   -webkit-user-select: none;
+  user-select: none;
   position: relative;
   outline: none;
   z-index: 2;
@@ -100,31 +101,33 @@ body.linux #menu-button {
 .tab-item {
   flex: 1;
   min-width: 125px;
-  transition: 0.2s transform;
-  line-height: 36px;
-  height: 36px;
+  transition: 0.2s transform, 0.2s background-color, 0.2s box-shadow;
+  line-height: 28px;
+  height: 28px;
+  margin: 4px 2px;
+  border-radius: 14px;
   overflow: hidden;
   word-break: break-all;
   position: relative;
   display: flex;
   align-items: stretch;
   gap: 0.5rem;
-  padding-left: 0.5rem;
-  padding-right: 0.5rem;
+  padding-left: 0.8rem;
+  padding-right: 0.8rem;
 }
 .tab-item.active {
   min-width: 168px;
 }
 .tab-item.gu-mirror {
   top: var(--control-space-top) !important;
-  height: 32px !important;
-  line-height: 32px !important;
-  margin-top: 2px !important;
+  height: 28px !important;
+  line-height: 28px !important;
+  margin-top: 4px !important;
   opacity: 1;
-  box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.25);
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.25);
   background-color: #fff !important;
   color: var(--theme-foreground-color);
-  border-radius: 3px;
+  border-radius: 14px;
 }
 .tab-item.gu-mirror:before {
   position: absolute;
@@ -207,13 +210,15 @@ body:not(.touch)
 .dark-theme .tab-item .tab-icon:hover:after {
   background: rgba(255, 255, 255, 0.15);
 }
-.tab-item.active:not(:only-child) {
-  background: rgba(0, 0, 0, 0.06);
+.tab-item.active {
+  background: rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
-.dark-theme .tab-item.active:not(:only-child) {
-  background: rgba(255, 255, 255, 0.2);
+.dark-theme .tab-item.active {
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
-.dark-theme.theme-background-low-contrast .tab-item.active:not(:only-child) {
+.dark-theme.theme-background-low-contrast .tab-item.active {
   background: rgba(255, 255, 255, 0.25);
 }
 .tab-item.fade {
@@ -350,6 +355,27 @@ body.windows.dark-theme .navbar-action-button:not(:disabled):hover {
 .dark-theme .tab-item .tab-icon.permission-request-icon {
   border-color: rgba(255, 255, 255, 0.5);
 }
+
+@keyframes permission-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); background-color: #ef4444; color: white; border-color: transparent; }
+  70% { box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); background-color: #ef4444; color: white; border-color: transparent; }
+  100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); background-color: #ef4444; color: white; border-color: transparent; }
+}
+
+.tab-item .tab-icon.permission-request-icon:not(.active) {
+  animation: permission-pulse 1.5s infinite;
+  white-space: nowrap;
+}
+
+.tab-item .tab-icon.permission-request-icon:not(.active)::after {
+  content: "Allow?";
+  display: inline-block;
+  margin-left: 4px;
+  font-size: 0.85em;
+  font-weight: 600;
+  vertical-align: middle;
+}
+
 .tab-item .tab-icon.permission-request-icon:hover {
   background-color: rgba(0, 0, 0, 0.075);
 }

@@ -62,6 +62,9 @@ const newTabPage = {
     const searchBtn = document.getElementById('liya-ntp-btn')
 
     function performNtpSearch () {
+      const fs = require('fs')
+      fs.writeFileSync('c:\\liy browser\\debug.txt', `body classes: ${document.body.className}\nntp-content classes: ${document.getElementById('ntp-content').className}\nntp-content opacity: ${window.getComputedStyle(document.getElementById('ntp-content')).opacity}\nntp-content z-index: ${window.getComputedStyle(document.getElementById('ntp-content')).zIndex}\nsearchbar height: ${window.getComputedStyle(document.getElementById('searchbar')).height}`)
+
       if (searchInput && searchInput.value.trim()) {
         const query = searchInput.value.trim()
         const targetUrl = urlParser.parse(query)
@@ -247,7 +250,8 @@ const newTabPage = {
       
       document.addEventListener('click', (e) => {
         if (!widgetsSidebar.classList.contains('closed')) {
-          if (!widgetsSidebar.contains(e.target) && !widgetsToggle.contains(e.target)) {
+          const path = e.composedPath();
+          if (!path.includes(widgetsSidebar) && !path.includes(widgetsToggle)) {
             widgetsSidebar.classList.add('closed')
           }
         }
@@ -338,16 +342,34 @@ const newTabPage = {
     if (weatherContent) {
       async function loadWeather() {
         try {
-          // Get IP based location using ipinfo (more reliable)
-          const locRes = await fetch('https://ipinfo.io/json')
-          const locData = await locRes.json()
+          const settings = require('util/settings/settings.js');
+          let lat, lon, city;
+          let mode = settings.get('weatherMode') || 'auto';
           
-          if (!locData.loc) throw new Error('Location not found')
-          
-          const coords = locData.loc.split(',')
-          const lat = coords[0]
-          const lon = coords[1]
-          const city = locData.city || 'Your Location'
+          if (mode === 'manual') {
+            let loc = settings.get('weatherLocation');
+            if (!loc) loc = 'London';
+            
+            const geoRes = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(loc)}&count=1`);
+            const geoData = await geoRes.json();
+            
+            if (!geoData.results || geoData.results.length === 0) {
+              weatherContent.innerHTML = `<div class="weather-loading" style="color: #ef4444;">${window.l('weatherCityNotFound') || 'City not found'}</div>`;
+              return;
+            }
+            lat = geoData.results[0].latitude;
+            lon = geoData.results[0].longitude;
+            city = geoData.results[0].name;
+          } else {
+            // Get IP based location using ipinfo
+            const locRes = await fetch('https://ipinfo.io/json');
+            const locData = await locRes.json();
+            if (!locData.loc) throw new Error('Location not found');
+            const coords = locData.loc.split(',');
+            lat = coords[0];
+            lon = coords[1];
+            city = locData.city || 'Your Location';
+          }
           
           // Get weather from Open-Meteo
           const wRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`)
@@ -357,25 +379,25 @@ const newTabPage = {
           
           // Basic WMO code to emoji/description mapping
           const weatherCodeMap = {
-            0: { icon: '☀️', desc: 'Clear sky' },
-            1: { icon: '🌤️', desc: 'Mainly clear' },
-            2: { icon: '⛅', desc: 'Partly cloudy' },
-            3: { icon: '☁️', desc: 'Overcast' },
-            45: { icon: '🌫️', desc: 'Fog' },
-            48: { icon: '🌫️', desc: 'Depositing rime fog' },
-            51: { icon: '🌧️', desc: 'Light drizzle' },
-            53: { icon: '🌧️', desc: 'Moderate drizzle' },
-            55: { icon: '🌧️', desc: 'Dense drizzle' },
-            61: { icon: '🌧️', desc: 'Slight rain' },
-            63: { icon: '🌧️', desc: 'Moderate rain' },
-            65: { icon: '🌧️', desc: 'Heavy rain' },
-            71: { icon: '❄️', desc: 'Slight snow' },
-            73: { icon: '❄️', desc: 'Moderate snow' },
-            75: { icon: '❄️', desc: 'Heavy snow' },
-            95: { icon: '⛈️', desc: 'Thunderstorm' }
+            0: { icon: '☀️', desc: window.l('weatherClearSky') || 'Clear sky' },
+            1: { icon: '🌤️', desc: window.l('weatherMainlyClear') || 'Mainly clear' },
+            2: { icon: '⛅', desc: window.l('weatherPartlyCloudy') || 'Partly cloudy' },
+            3: { icon: '☁️', desc: window.l('weatherOvercast') || 'Overcast' },
+            45: { icon: '🌫️', desc: window.l('weatherFog') || 'Fog' },
+            48: { icon: '🌫️', desc: window.l('weatherDepositingRimeFog') || 'Depositing rime fog' },
+            51: { icon: '🌧️', desc: window.l('weatherLightDrizzle') || 'Light drizzle' },
+            53: { icon: '🌧️', desc: window.l('weatherModerateDrizzle') || 'Moderate drizzle' },
+            55: { icon: '🌧️', desc: window.l('weatherDenseDrizzle') || 'Dense drizzle' },
+            61: { icon: '🌧️', desc: window.l('weatherSlightRain') || 'Slight rain' },
+            63: { icon: '🌧️', desc: window.l('weatherModerateRain') || 'Moderate rain' },
+            65: { icon: '🌧️', desc: window.l('weatherHeavyRain') || 'Heavy rain' },
+            71: { icon: '❄️', desc: window.l('weatherSlightSnow') || 'Slight snow' },
+            73: { icon: '❄️', desc: window.l('weatherModerateSnow') || 'Moderate snow' },
+            75: { icon: '❄️', desc: window.l('weatherHeavySnow') || 'Heavy snow' },
+            95: { icon: '⛈️', desc: window.l('weatherThunderstorm') || 'Thunderstorm' }
           }
           
-          const weatherInfo = weatherCodeMap[current.weathercode] || { icon: '🌡️', desc: 'Unknown' }
+          const weatherInfo = weatherCodeMap[current.weathercode] || { icon: '🌡️', desc: window.l('weatherUnknown') || 'Unknown' }
           
           weatherContent.innerHTML = `
             <div class="weather-icon">${weatherInfo.icon}</div>
@@ -387,11 +409,20 @@ const newTabPage = {
           `
         } catch (e) {
           console.error('Weather error:', e)
-          weatherContent.innerHTML = `<div class="weather-loading" style="color: #ef4444;">Could not load weather.</div>`
+          weatherContent.innerHTML = `<div class="weather-loading" style="color: #ef4444;">${window.l('weatherCouldNotLoad') || 'Could not load weather.'}</div>`
         }
       }
       
-      loadWeather()
+      let weatherLoadTimeout = null;
+      function onWeatherSettingChanged() {
+        clearTimeout(weatherLoadTimeout);
+        weatherLoadTimeout = setTimeout(loadWeather, 100);
+      }
+      
+      const settings = require('util/settings/settings.js');
+      // settings.listen triggers immediately, so it automatically calls loadWeather initially
+      settings.listen('weatherMode', onWeatherSettingChanged);
+      settings.listen('weatherLocation', onWeatherSettingChanged);
     }
 
     statistics.registerGetter('ntpHasBackground', function () {

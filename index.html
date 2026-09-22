@@ -231,12 +231,15 @@
               <div class="liya-hero-divider"></div>
               <h1 class="liya-title">LIYA BROWSER</h1>
               <p class="liya-subtitle">Fast • Private • Minimal Chromium Engine</p>
+              <div style="margin-top: 30px;">
+                <p class="liya-motivational-quote" style="margin: 0; font-family: 'Inter', 'Segoe UI', sans-serif; font-size: 0.75em; text-transform: uppercase; letter-spacing: 6px; font-weight: 600; background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 30px rgba(79, 172, 254, 0.5); padding: 12px 25px; border-top: 1px solid rgba(79, 172, 254, 0.3); border-bottom: 1px solid rgba(79, 172, 254, 0.3); display: inline-block; box-shadow: inset 0 20px 20px -20px rgba(79, 172, 254, 0.2), inset 0 -20px 20px -20px rgba(79, 172, 254, 0.2);">PROOF THAT NAVRAJ HAS A BRILLIANT MIND</p>
+              </div>
             </div>
 
             <div class="liya-search-container">
               <div class="liya-search-bar">
                 <i class="i carbon:search search-icon"></i>
-                <input type="text" id="liya-ntp-input" placeholder="Search with Google or enter address" />
+                <input type="text" id="liya-ntp-input" data-placeholder="ntpSearchPlaceholder" placeholder="Search the web with Liya or enter a URL" />
               </div>
             </div>
 
@@ -286,17 +289,17 @@
             <div class="widgets-body">
               <!-- Weather Widget -->
               <div class="widget-card" id="weather-widget">
-                <h3>Weather</h3>
+                <h3 data-string="widgetWeather">Weather</h3>
                 <div class="weather-content" id="weather-content">
-                  <div class="weather-loading">Loading weather...</div>
+                  <div class="weather-loading" data-string="weatherLoading">Loading weather...</div>
                 </div>
               </div>
 
               <!-- To-Do Widget -->
               <div class="widget-card" id="todo-widget">
-                <h3>To-Do List</h3>
+                <h3 data-string="widgetTodo">To-Do List</h3>
                 <div class="todo-input-row">
-                  <input type="text" id="todo-input" placeholder="Add a new task..." autocomplete="off">
+                  <input type="text" id="todo-input" data-placeholder="widgetTodoPlaceholder" placeholder="Add a new task..." autocomplete="off">
                   <button id="todo-add-btn"><i class="i carbon:add"></i></button>
                 </div>
                 <ul id="todo-list" class="todo-list"></ul>
@@ -304,8 +307,8 @@
 
               <!-- Quick Note Widget -->
               <div class="widget-card" id="note-widget">
-                <h3>Quick Note</h3>
-                <textarea id="note-textarea" placeholder="Type something here... It auto-saves."></textarea>
+                <h3 data-string="widgetNote">Quick Note</h3>
+                <textarea id="note-textarea" data-placeholder="widgetNotePlaceholder" placeholder="Type something here... It auto-saves."></textarea>
               </div>
             </div>
           </div>
@@ -444,6 +447,17 @@
         <button id="password-viewer-import"><span class="i carbon:document-import"></span><span data-string="importCredentials"></span></button>
         <button id="password-viewer-export"><span class="i carbon:export"></span><span data-string="exportCredentials"></span></button>
 </div>
+    </div>
+
+    <div id="permission-popup" class="permission-popup" hidden>
+      <div class="permission-popup-header">
+        <i class="i carbon:microphone permission-popup-icon"></i>
+        <span class="permission-popup-text">Website wants to use your microphone</span>
+      </div>
+      <div class="permission-popup-actions">
+        <button class="permission-btn permission-block-btn" data-string="permissionBlock">Block</button>
+        <button class="permission-btn permission-allow-btn" data-string="permissionAllow">Allow</button>
+      </div>
     </div>
 
     <!-- add scripts in Gruntfile.js -->

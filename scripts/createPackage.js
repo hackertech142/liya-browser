@@ -101,6 +101,16 @@ module.exports = function (platform, extraOptions) {
       target: 'nsis',
       icon: 'icons/icon256.ico'
     },
+    nsis: {
+      oneClick: true,
+      perMachine: false,
+      allowToChangeInstallationDirectory: false,
+      installerIcon: 'icons/icon256.ico',
+      uninstallerIcon: 'icons/icon256.ico',
+      uninstallDisplayName: 'Liya Browser',
+      createDesktopShortcut: 'always',
+      createStartMenuShortcut: true
+    },
     mac: {
       icon: 'icons/icon.icns',
       target: 'dir',

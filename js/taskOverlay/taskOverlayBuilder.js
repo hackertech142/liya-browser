@@ -61,7 +61,7 @@ var TaskOverlayBuilder = {
         })
         return collapseButton
       },
-      nameInputField: function (task, taskIndex) {
+      nameInputField: function (task, taskIndex, nameSpan, renameButton) {
         var input = document.createElement('input')
         input.classList.add('task-name')
 
@@ -75,17 +75,22 @@ var TaskOverlayBuilder = {
           if (e.keyCode === 13) {
             this.blur()
           }
+        })
 
+        input.addEventListener('blur', function (e) {
           tasks.update(task.id, {name: this.value})
+          if (nameSpan && renameButton) {
+             nameSpan.textContent = this.value || taskName
+             nameSpan.style.display = ''
+             this.style.display = 'none'
+             renameButton.style.display = ''
+          }
+        })
+        
+        input.addEventListener('click', function (e) {
+           e.stopPropagation()
         })
 
-        input.addEventListener('focusin', function (e) {
-          if (tasks.isCollapsed(task.id)) {
-            this.blur()
-            return
-          }
-          this.select()
-        })
         return input
       },
       deleteButton: function (container, task) {
@@ -128,13 +133,55 @@ var TaskOverlayBuilder = {
         var taskActionContainer = document.createElement('div')
         taskActionContainer.className = 'task-action-container'
 
+        // add the drag handle
+        var dragHandle = document.createElement('div')
+        dragHandle.className = 'task-drag-handle i carbon:menu'
+        dragHandle.style.cursor = 'grab'
+        dragHandle.style.opacity = '0.5'
+        dragHandle.style.fontSize = '1.2em'
+        dragHandle.style.marginRight = '8px'
+        dragHandle.title = "Drag to reorder"
+        taskActionContainer.appendChild(dragHandle)
+
         // add the collapse button
         var collapseButton = this.collapseButton(taskContainer, task)
         taskActionContainer.appendChild(collapseButton)
 
+        // add the task name span
+        var taskNameStr = l('defaultTaskName').replace('%n', taskIndex + 1)
+        var nameSpan = document.createElement('span')
+        nameSpan.className = 'task-name-label'
+        nameSpan.textContent = task.name || taskNameStr
+        nameSpan.style.flex = '1'
+        nameSpan.style.fontSize = '1.2em'
+        nameSpan.style.opacity = '0.75'
+        nameSpan.style.margin = '0.5em 0.75em 0.5em 0.5em'
+        nameSpan.style.whiteSpace = 'nowrap'
+        nameSpan.style.overflow = 'hidden'
+        nameSpan.style.textOverflow = 'ellipsis'
+        taskActionContainer.appendChild(nameSpan)
+
+        // create the rename button
+        var renameButton = document.createElement('button')
+        renameButton.className = 'task-rename-button i carbon:edit'
+        renameButton.title = "Rename task"
+        renameButton.tabIndex = -1
+
         // add the input for the task name
-        var input = this.nameInputField(task, taskIndex)
+        var input = this.nameInputField(task, taskIndex, nameSpan, renameButton)
+        input.style.display = 'none'
         taskActionContainer.appendChild(input)
+
+        // add rename button click logic
+        renameButton.addEventListener('click', function(e) {
+          e.stopPropagation()
+          nameSpan.style.display = 'none'
+          input.style.display = 'block'
+          renameButton.style.display = 'none'
+          input.focus()
+          input.select()
+        })
+        taskActionContainer.appendChild(renameButton)
 
         // add the delete button
         var deleteButton = this.deleteButton(taskContainer, task)

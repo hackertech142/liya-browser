@@ -223,18 +223,37 @@ function switchToTab (id, options) {
 
   tabEditor.hide()
 
-  if (!tabs.get(id).url) {
+  const url = tabs.get(id).url || '';
+  const isNtpUrl = !url || url === 'min://newtab' || url === 'about:blank' || url.startsWith('min://app/pages/newtab');
+  if (isNtpUrl) {
     document.body.classList.add('is-ntp')
   } else {
     document.body.classList.remove('is-ntp')
+  }
+
+  if (tabs.get(id).private) {
+    document.body.classList.add('is-private-tab')
+  } else {
+    document.body.classList.remove('is-private-tab')
   }
 }
 
 tasks.on('tab-updated', function (id, key) {
   if (key === 'url' && id === tabs.getSelected()) {
-    document.body.classList.remove('is-ntp')
+    const url = tabs.get(id).url || '';
+    const isNtpUrl = !url || url === 'min://newtab' || url === 'about:blank' || url.startsWith('min://app/pages/newtab');
+    if (isNtpUrl) {
+      document.body.classList.add('is-ntp')
+      ipc.send('hideCurrentView')
+    } else {
+      document.body.classList.remove('is-ntp')
+      if (webviews.placeholderRequests.length === 0) {
+        webviews.setSelected(id)
+      }
+    }
   }
 })
+
 
 webviews.bindEvent('did-create-popup', function (tabId, popupId, initialURL) {
   var popupTab = tabs.add({
@@ -301,14 +320,14 @@ tabBar.events.on('tab-closed', function (id) {
 })
 
 module.exports = {
-  addTask,
-  addTab,
-  destroyTask,
-  destroyTab,
-  closeTask,
-  closeTab,
-  switchToTask,
-  switchToTab,
-  moveTabLeft,
-  moveTabRight
+  addTask: addTask,
+  addTab: addTab,
+  destroyTask: destroyTask,
+  destroyTab: destroyTab,
+  closeTask: closeTask,
+  closeTab: closeTab,
+  switchToTask: switchToTask,
+  switchToTab: switchToTab,
+  moveTabLeft: moveTabLeft,
+  moveTabRight: moveTabRight
 }

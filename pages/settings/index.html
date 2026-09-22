@@ -119,17 +119,28 @@
         ></label>
       </div>
 
-      <div class="setting-section">
-        <input type="checkbox" id="checkbox-show-divider" />
-        <label
-          for="checkbox-show-divider"
-          data-string="settingsShowDividerToggle"
-        ></label>
-      </div>
+
 
       <div class="setting-section">
         <label for="setting-language-picker" data-string="settingsLanguageSelection"></label>
         <select id="setting-language-picker"></select>
+      </div>
+    </div>
+
+    <div class="settings-container" id="widgets-settings-container">
+      <h3>Widgets</h3>
+
+      <div class="setting-section">
+        <label for="weather-mode">Weather Mode</label>
+        <select id="weather-mode">
+          <option value="auto">Auto (IP-based)</option>
+          <option value="manual">Manual (Enter Location)</option>
+        </select>
+      </div>
+
+      <div class="setting-section" id="weather-location-section" hidden>
+        <label for="weather-location" data-string="settingsWeatherCity">City Name</label>
+        <input type="text" id="weather-location" placeholder="e.g. Delhi or London" style="width: 200px;" />
       </div>
     </div>
 
@@ -214,19 +225,21 @@
 		</div>
 
       <div class="setting-section">
-        <input type="checkbox" id="checkbox-update-notifications" />
+        <input type="checkbox" id="checkbox-update-notifications" disabled />
         <label
           for="checkbox-update-notifications"
           data-string="settingsUpdateNotificationsToggle"
         ></label>
+        <span style="font-size: 12px; opacity: 0.6; margin-left: 10px;">(Currently not in use for your privacy)</span>
       </div>
       <div class="setting-section">
-        <input type="checkbox" id="checkbox-usage-statistics" />
+        <input type="checkbox" id="checkbox-usage-statistics" disabled />
         <label
           for="checkbox-usage-statistics"
           data-string="settingsUsageStatisticsToggle"
           data-allowHTML
         ></label>
+        <span style="font-size: 12px; opacity: 0.6; margin-left: 10px;">(Currently not in use for your privacy)</span>
       </div>
     </div>
 

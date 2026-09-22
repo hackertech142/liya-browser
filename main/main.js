@@ -35,6 +35,10 @@ let isInstallerRunning = false
 const isDevelopmentMode = process.argv.some(arg => arg === '--development-mode')
 const isDebuggingEnabled = process.argv.some(arg => arg === '--debug-browser')
 
+if (process.platform === 'win32') {
+  app.setAppUserModelId('com.liya.browser')
+}
+
 function clamp (n, min, max) {
   return Math.max(Math.min(n, max), min)
 }
@@ -164,12 +168,23 @@ function createWindow (customArgs = {}) {
 
   if (!bounds) { // there was an error, probably because the file doesn't exist
     var size = electron.screen.getPrimaryDisplay().workAreaSize
+    var w = Math.floor(size.width * 0.85);
+    var h = Math.floor(size.height * 0.85);
     bounds = {
-      x: 0,
-      y: 0,
-      width: size.width,
-      height: size.height,
+      x: Math.floor((size.width - w) / 2),
+      y: Math.floor((size.height - h) / 2),
+      width: w,
+      height: h,
       maximized: true
+    }
+  } else {
+    // Fix existing profiles where the unmaximized size was saved as 100% of the screen
+    var size = electron.screen.getPrimaryDisplay().workAreaSize;
+    if (bounds.width >= size.width - 20 && bounds.height >= size.height - 20) {
+      bounds.width = Math.floor(size.width * 0.85);
+      bounds.height = Math.floor(size.height * 0.85);
+      bounds.x = Math.floor((size.width - bounds.width) / 2);
+      bounds.y = Math.floor((size.height - bounds.height) / 2);
     }
   }
 
@@ -204,7 +219,7 @@ function createWindowWithBounds (bounds, customArgs) {
       height: 36
     } : false,
     trafficLightPosition: { x: 12, y: 10 },
-    icon: __dirname + '/icons/icon256.png',
+    icon: process.platform === 'win32' ? __dirname + '/icons/icon256.ico' : __dirname + '/icons/icon256.png',
     frame: settings.get('useSeparateTitlebar'),
     alwaysOnTop: settings.get('windowAlwaysOnTop'),
     backgroundColor: '#fff', // the value of this is ignored, but setting it seems to work around https://github.com/electron/electron/issues/10559

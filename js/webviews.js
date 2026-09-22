@@ -233,6 +233,14 @@ const webviews = {
       return
     }
 
+    var tabData = tasks.getTaskContainingTab(id).tabs.get(id)
+    var url = tabData ? tabData.url : ''
+    var isNtpUrl = !url || url === 'min://newtab' || url === 'about:blank' || url.startsWith('min://app/pages/newtab')
+    if (isNtpUrl) {
+      ipc.send('hideCurrentView')
+      return
+    }
+
     ipc.send('setView', {
       id: id,
       bounds: webviews.getViewBounds(),
@@ -294,12 +302,19 @@ const webviews = {
     if (webviews.placeholderRequests.length === 0) {
       // multiple things can request a placeholder at the same time, but we should only show the view again if nothing requires a placeholder anymore
       if (webviews.hasViewForTab(webviews.selectedId)) {
-        ipc.send('setView', {
-          id: webviews.selectedId,
-          bounds: webviews.getViewBounds(),
-          focus: true
-        })
-        webviews.emitEvent('view-shown', webviews.selectedId)
+        var tabData = tasks.getTaskContainingTab(webviews.selectedId).tabs.get(webviews.selectedId)
+        var url = tabData ? tabData.url : ''
+        var isNtpUrl = !url || url === 'min://newtab' || url === 'about:blank' || url.startsWith('min://app/pages/newtab')
+        if (!isNtpUrl) {
+          ipc.send('setView', {
+            id: webviews.selectedId,
+            bounds: webviews.getViewBounds(),
+            focus: true
+          })
+          webviews.emitEvent('view-shown', webviews.selectedId)
+        } else {
+          ipc.send('hideCurrentView')
+        }
       }
       // wait for the view to be visible before removing the placeholder
       setTimeout(function () {

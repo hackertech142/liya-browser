@@ -3,7 +3,7 @@ document.title = l('settingsPreferencesHeading') + ' | Liya'
 var contentTypeBlockingContainer = document.getElementById('content-type-blocking')
 var banner = document.getElementById('restart-required-banner')
 var siteThemeCheckbox = document.getElementById('checkbox-site-theme')
-var showDividerCheckbox = document.getElementById('checkbox-show-divider')
+
 var userscriptsCheckbox = document.getElementById('checkbox-userscripts')
 var userscriptsShowDirectorySection = document.getElementById('userscripts-show-directory')
 var separateTitlebarCheckbox = document.getElementById('checkbox-separate-titlebar')
@@ -273,17 +273,7 @@ userscriptsShowDirectorySection.getElementsByTagName('a')[0].addEventListener('c
   postMessage({ message: 'showUserscriptDirectory' })
 })
 
-/* show divider between tabs setting */
 
-settings.get('showDividerBetweenTabs', function (value) {
-  if (value === true) {
-    showDividerCheckbox.checked = true
-  }
-})
-
-showDividerCheckbox.addEventListener('change', function (e) {
-  settings.set('showDividerBetweenTabs', this.checked)
-})
 
 /* language setting*/
 
@@ -675,4 +665,31 @@ function createBang (bang, snippet, redirect) {
   li.appendChild(xButton)
 
   return li
+}
+
+/* weather settings */
+var weatherModeSelect = document.getElementById('weather-mode');
+var weatherLocationSection = document.getElementById('weather-location-section');
+var weatherLocationInput = document.getElementById('weather-location');
+
+if (weatherModeSelect) {
+  settings.get('weatherMode', function (value) {
+    weatherModeSelect.value = value || 'auto';
+    weatherLocationSection.hidden = weatherModeSelect.value !== 'manual';
+  });
+
+  weatherModeSelect.addEventListener('change', function () {
+    settings.set('weatherMode', this.value);
+    weatherLocationSection.hidden = this.value !== 'manual';
+  });
+}
+
+if (weatherLocationInput) {
+  settings.get('weatherLocation', function (value) {
+    weatherLocationInput.value = value || '';
+  });
+
+  weatherLocationInput.addEventListener('change', function () {
+    settings.set('weatherLocation', this.value);
+  });
 }

@@ -80,6 +80,7 @@ var taskOverlay = {
     const sortable = new Sortable(taskContainer, {
       group: 'overlay-tasks',
       draggable: '.task-container',
+      handle: '.task-drag-handle',
       ghostClass: 'task-drop-placeholder',
       scroll: true,
       scrollSensitivity: 100,

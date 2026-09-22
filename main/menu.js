@@ -422,25 +422,25 @@ function buildAppMenu (options = {}) {
         {
           label: l('appMenuKeyboardShortcuts'),
           click: function () {
-            openTabInWindow('https://github.com/hackertech142/liya-ai-workstation')
+            openTabInWindow('min://app/pages/settings/index.html#keymap-settings-container')
           }
         },
         {
           label: l('appMenuReportBug'),
           click: function () {
-            openTabInWindow('https://github.com/hackertech142/liya-ai-workstation/issues/new')
+            openTabInWindow('https://github.com/hackertech142/liya-browser/issues/new')
           }
         },
         {
           label: l('appMenuTakeTour'),
           click: function () {
-            openTabInWindow('https://github.com/hackertech142/liya-ai-workstation')
+            openTabInWindow('https://github.com/hackertech142/liya-browser#readme')
           }
         },
         {
           label: l('appMenuViewGithub'),
           click: function () {
-            openTabInWindow('https://github.com/hackertech142/liya-ai-workstation')
+            openTabInWindow('https://github.com/hackertech142/liya-browser')
           }
         },
         ...(process.platform !== 'darwin' ? [{ type: 'separator' }] : []),
