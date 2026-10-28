@@ -207,8 +207,8 @@ const webviews = {
     if (!existingViewId) {
       if (tabData.url) {
         ipc.send('loadURLInView', { id: tabData.id, url: urlParser.parse(tabData.url) })
-      } else if (tabData.private) {
-        // workaround for https://github.com/LiyaDev/liya-browser/issues/872
+      } else {
+        // Always load min://newtab for new tabs so it is committed to navigation history
         ipc.send('loadURLInView', { id: tabData.id, url: urlParser.parse('min://newtab') })
       }
     }

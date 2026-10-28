@@ -45,6 +45,14 @@ body {
   width: 100% !important;
 }
 
+body.windows #navbar-top-row {
+  padding: 0 180px 0 8px !important; /* Reserve 180px on right for 3-line task button + Windows caption buttons */
+}
+
+body.linux #navbar-top-row {
+  padding: 0 136px 0 8px !important;
+}
+
 #navbar-bottom-row {
   display: flex !important;
   flex-direction: row !important;
@@ -60,12 +68,14 @@ body {
 }
 
 #navbar #tabs {
-  flex: 1 !important;
+  flex: 1 1 auto !important;
   display: flex !important;
   flex-direction: row !important;
   height: 100% !important;
   align-items: flex-end !important; /* Tabs sit on the bottom edge */
   justify-content: flex-start !important; /* align content to the left */
+  min-width: 0 !important;
+  overflow: hidden !important;
 }
 
 #navbar #tabs-inner {
@@ -75,6 +85,16 @@ body {
   align-items: flex-end !important;
   height: 100% !important;
   padding-bottom: 4px !important;
+  min-width: 0 !important;
+  max-width: calc(100% - 38px) !important; /* Guarantee 38px for add-tab-button so it never goes behind 3-line button */
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  scrollbar-width: none !important;
+}
+
+#navbar #tabs-inner::-webkit-scrollbar {
+  display: none !important;
+  height: 0 !important;
 }
 
 #navbar #tabs #add-tab-button {
@@ -83,6 +103,8 @@ body {
   margin-bottom: 2px !important;
   width: 28px !important;
   height: 28px !important;
+  min-width: 28px !important;
+  flex-shrink: 0 !important;
 }
 
 #navbar #tab-editor {

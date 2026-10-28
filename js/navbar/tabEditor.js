@@ -23,30 +23,32 @@ const tabEditor = {
     bookmarkStar.update(tabId, tabEditor.star)
     contentBlockingToggle.update(tabId, tabEditor.contentBlockingToggle)
 
-    webviews.requestPlaceholder('editMode')
+    var currentURL = urlParser.getSourceURL(tabs.get(tabId).url)
+    var isNewTab = !currentURL || currentURL === 'min://newtab' || currentURL.startsWith('min://app/pages/newtab')
+
+    if (!isNewTab) {
+      webviews.requestPlaceholder('editMode')
+    }
 
     document.body.classList.add('is-edit-mode')
 
-    var currentURL = urlParser.getSourceURL(tabs.get(tabId).url)
-    if (currentURL === 'min://newtab') {
-      currentURL = ''
-    }
-
-    tabEditor.input.value = editingValue || currentURL
+    tabEditor.input.value = editingValue || (isNewTab ? '' : currentURL)
     tabEditor.input.focus()
-    if (!editingValue) {
+    if (!editingValue && !isNewTab) {
       tabEditor.input.select()
     }
     // https://github.com/LiyaDev/liya-browser/discussions/1506
     tabEditor.input.scrollLeft = 0
 
-    searchbar.show(tabEditor.input)
+    if (!isNewTab) {
+      searchbar.show(tabEditor.input)
 
-    if (showSearchbar !== false) {
-      if (editingValue) {
-        searchbar.showResults(editingValue, null)
-      } else {
-        searchbar.showResults('', null)
+      if (showSearchbar !== false) {
+        if (editingValue) {
+          searchbar.showResults(editingValue, null)
+        } else {
+          searchbar.showResults('', null)
+        }
       }
     }
 
@@ -70,8 +72,26 @@ const tabEditor = {
       })
     }
   },
+  updateInput: function (tabId = tabs.getSelected()) {
+    if (tabEditor.isShown && document.activeElement === tabEditor.input) {
+      return
+    }
+    if (!tabId || !tabs.get(tabId)) {
+      tabEditor.input.value = ''
+      return
+    }
+    var currentURL = urlParser.getSourceURL(tabs.get(tabId).url || '')
+    if (!currentURL || currentURL === 'min://newtab' || currentURL.startsWith('min://app/pages/newtab') || currentURL === 'about:blank') {
+      tabEditor.input.value = ''
+    } else {
+      tabEditor.input.value = currentURL
+    }
+  },
   hide: function () {
+    tabEditor.isShown = false
+    document.body.classList.remove('is-edit-mode')
     tabEditor.input.blur()
+    tabEditor.updateInput()
     searchbar.hide()
     webviews.hidePlaceholder('editMode')
   },

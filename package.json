@@ -67,7 +67,7 @@
     "postinstall": "node ./scripts/setupDevEnv.js",
     "test": "standard --verbose js/**/*.js main/*.js",
     "watch": "node ./scripts/watch.js",
-    "startElectron": "electron . --development-mode",
+    "startElectron": "node ./scripts/startElectron.js",
     "start": "npm run build && concurrently \"npm run watch\" \"npm run startElectron\"",
     "buildMain": "node ./scripts/buildMain.js",
     "buildBrowser": "node ./scripts/buildBrowser.js",

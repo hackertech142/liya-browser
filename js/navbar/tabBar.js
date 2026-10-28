@@ -147,7 +147,7 @@ const tabBar = {
       tabTitle = l('newTabLabel')
     } else if (tabData.title) {
       tabTitle = tabData.title
-    } else if (tabData.loaded) {
+    } else if (tabData.url) {
       tabTitle = tabData.url
     }
 

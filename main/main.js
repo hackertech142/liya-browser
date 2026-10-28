@@ -19,11 +19,13 @@ const {
   WebContentsView
 } = electron
 
-crashReporter.start({
-  submitURL: 'https://liya-browser.org/',
-  uploadToServer: false,
-  compress: true
-})
+if (crashReporter && crashReporter.start) {
+  crashReporter.start({
+    submitURL: 'https://liya-browser.org/',
+    uploadToServer: false,
+    compress: true
+  })
+}
 
 if (process.argv.some(arg => arg === '-v' || arg === '--version')) {
   console.log('Liya Browser: ' + app.getVersion())
@@ -206,6 +208,7 @@ function createWindow (customArgs = {}) {
 
 function createWindowWithBounds (bounds, customArgs) {
   const newWin = new BaseWindow({
+    show: false,
     width: bounds.width,
     height: bounds.height,
     x: bounds.x,
@@ -263,11 +266,18 @@ function createWindowWithBounds (bounds, customArgs) {
   mainView.setBounds({x: 0, y: 0, width: winBounds.width, height: winBounds.height})
   newWin.contentView.addChildView(mainView)
 
-  // sometimes getContentBounds doesn't provide correct bounds until after the window has finished loading
+  // Chrome-style load: show window once page finishes loading completely
   mainView.webContents.once('did-finish-load', function () {
     const winBounds = newWin.getContentBounds()
     mainView.setBounds({x: 0, y: 0, width: winBounds.width, height: winBounds.height})
+    newWin.show()
   })
+
+  setTimeout(function () {
+    if (!newWin.isDestroyed() && !newWin.isVisible()) {
+      newWin.show()
+    }
+  }, 1200)
 
   mainView.webContents.ipc.on('set-window-title', function(e, title) {
     newWin.title = title

@@ -222,11 +222,16 @@ function switchToTab (id, options) {
   })
 
   tabEditor.hide()
+  tabEditor.updateInput(id)
 
   const url = tabs.get(id).url || '';
   const isNtpUrl = !url || url === 'min://newtab' || url === 'about:blank' || url.startsWith('min://app/pages/newtab');
   if (isNtpUrl) {
     document.body.classList.add('is-ntp')
+    const ntpInput = document.getElementById('liya-ntp-input')
+    if (ntpInput) {
+      ntpInput.value = ''
+    }
   } else {
     document.body.classList.remove('is-ntp')
   }
@@ -240,6 +245,7 @@ function switchToTab (id, options) {
 
 tasks.on('tab-updated', function (id, key) {
   if (key === 'url' && id === tabs.getSelected()) {
+    tabEditor.updateInput(id)
     const url = tabs.get(id).url || '';
     const isNtpUrl = !url || url === 'min://newtab' || url === 'about:blank' || url.startsWith('min://app/pages/newtab');
     if (isNtpUrl) {
@@ -306,6 +312,7 @@ searchbar.events.on('url-selected', function (data) {
       openInBackground: true
     })
   } else {
+    tabs.update(tabs.getSelected(), { url: data.url })
     webviews.update(tabs.getSelected(), data.url)
     tabEditor.hide()
   }

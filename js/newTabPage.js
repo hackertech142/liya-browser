@@ -2,6 +2,7 @@ const path = require('path')
 const statistics = require('js/statistics.js')
 const webviews = require('webviews.js')
 const urlParser = require('util/urlParser.js')
+const searchbar = require('searchbar/searchbar.js')
 
 const newTabPage = {
   background: document.getElementById('ntp-background'),
@@ -62,17 +63,27 @@ const newTabPage = {
     const searchBtn = document.getElementById('liya-ntp-btn')
 
     function performNtpSearch () {
-      const fs = require('fs')
-      fs.writeFileSync('c:\\liy browser\\debug.txt', `body classes: ${document.body.className}\nntp-content classes: ${document.getElementById('ntp-content').className}\nntp-content opacity: ${window.getComputedStyle(document.getElementById('ntp-content')).opacity}\nntp-content z-index: ${window.getComputedStyle(document.getElementById('ntp-content')).zIndex}\nsearchbar height: ${window.getComputedStyle(document.getElementById('searchbar')).height}`)
-
       if (searchInput && searchInput.value.trim()) {
         const query = searchInput.value.trim()
         const targetUrl = urlParser.parse(query)
-        webviews.update(tabs.getSelected(), targetUrl)
+        searchInput.value = ''
+        searchbar.openURL(targetUrl)
       }
     }
 
     if (searchInput) {
+      searchInput.addEventListener('focus', function () {
+        searchbar.show(searchInput)
+        if (searchInput.value) {
+          searchbar.showResults(searchInput.value)
+        } else {
+          searchbar.showResults('')
+        }
+      })
+      searchInput.addEventListener('input', function () {
+        searchbar.show(searchInput)
+        searchbar.showResults(searchInput.value)
+      })
       searchInput.addEventListener('keydown', function (e) {
         if (e.key === 'Enter') {
           performNtpSearch()
@@ -154,7 +165,7 @@ const newTabPage = {
           if (!targetUrl.startsWith('http://') && !targetUrl.startsWith('https://')) {
             targetUrl = 'https://' + targetUrl
           }
-          webviews.update(tabs.getSelected(), targetUrl)
+          searchbar.openURL(targetUrl)
         })
 
         // Click handler for remove button
@@ -310,12 +321,16 @@ const newTabPage = {
         })
 
         todoList.querySelectorAll('.todo-delete').forEach(btn => {
-          btn.addEventListener('click', (e) => {
+          const deleteHandler = (e) => {
+            e.preventDefault()
+            e.stopPropagation()
             const idx = e.currentTarget.getAttribute('data-index')
             tasks.splice(idx, 1)
             saveTodos()
             renderTodos()
-          })
+          }
+          btn.addEventListener('mousedown', deleteHandler)
+          btn.addEventListener('click', deleteHandler)
         })
       }
 
@@ -329,7 +344,15 @@ const newTabPage = {
         }
       }
 
-      todoAddBtn.addEventListener('click', addTodo)
+      const addHandler = (e) => {
+        if (e) {
+          e.preventDefault()
+          e.stopPropagation()
+        }
+        addTodo()
+      }
+      todoAddBtn.addEventListener('mousedown', addHandler)
+      todoAddBtn.addEventListener('click', addHandler)
       todoInput.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') addTodo()
       })

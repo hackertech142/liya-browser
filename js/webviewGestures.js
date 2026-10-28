@@ -93,28 +93,48 @@ function onSwipeGestureLowVelocity () {
   if (!selectedTab) return
 
   const ratio = Math.abs(horizontalMouseMove / (verticalMouseMove || 1))
-  if (ratio > 1.0) {
-    // swipe left (leftMouseMove) to go forward
-    if (leftMouseMove > 35 && (beginningScrollRight === null || beginningScrollRight < 100)) {
-      webviews.callAsync(selectedTab, 'canGoForward', function (err, canGoForward) {
-        if (canGoForward) {
-          resetDistanceCounters()
-          resetScrollCounters()
-          webviewGestures.showForwardArrow()
-          webviews.callAsync(selectedTab, 'goForward')
-        }
-      })
-      return
-    }
-
-    // swipe right (rightMouseMove) to go back
-    if (rightMouseMove > 35 && (beginningScrollLeft === null || beginningScrollLeft < 100)) {
+  if (ratio > 0.8) {
+    // swipe right (rightMouseMove, finger moves right) to go back or switch to previous tab
+    if (rightMouseMove > 25) {
       webviews.callAsync(selectedTab, 'canGoBack', function (err, canGoBack) {
         if (canGoBack) {
           resetDistanceCounters()
           resetScrollCounters()
           webviewGestures.showBackArrow()
           webviews.goBackIgnoringRedirects(selectedTab)
+        } else {
+          var allTabs = tabs.get()
+          var selectedIndex = tabs.getIndex(selectedTab)
+          if (selectedIndex > 0) {
+            resetDistanceCounters()
+            resetScrollCounters()
+            webviewGestures.showBackArrow()
+            var prevTabId = allTabs[selectedIndex - 1].id
+            require('browserUI.js').switchToTab(prevTabId)
+          }
+        }
+      })
+      return
+    }
+
+    // swipe left (leftMouseMove, finger moves left) to go forward or switch to next tab
+    if (leftMouseMove > 25) {
+      webviews.callAsync(selectedTab, 'canGoForward', function (err, canGoForward) {
+        if (canGoForward) {
+          resetDistanceCounters()
+          resetScrollCounters()
+          webviewGestures.showForwardArrow()
+          webviews.callAsync(selectedTab, 'goForward')
+        } else {
+          var allTabs = tabs.get()
+          var selectedIndex = tabs.getIndex(selectedTab)
+          if (selectedIndex >= 0 && selectedIndex < allTabs.length - 1) {
+            resetDistanceCounters()
+            resetScrollCounters()
+            webviewGestures.showForwardArrow()
+            var nextTabId = allTabs[selectedIndex + 1].id
+            require('browserUI.js').switchToTab(nextTabId)
+          }
         }
       })
       return
@@ -122,9 +142,7 @@ function onSwipeGestureLowVelocity () {
   }
 }
 
-webviews.bindIPC('wheel-event', function (tabId, e) {
-  e = JSON.parse(e)
-
+function handleWheel (e) {
   if (e.defaultPrevented) {
     return
   }
@@ -140,39 +158,6 @@ webviews.bindIPC('wheel-event', function (tabId, e) {
   var platformZoomKey = ((navigator.platform === 'MacIntel') ? e.metaKey : e.ctrlKey)
   var platformSecondaryKey = ((navigator.platform === 'MacIntel') ? e.ctrlKey : false)
 
-  if (beginningScrollLeft === null || beginningScrollRight === null) {
-    webviews.callAsync(tabs.getSelected(), 'executeJavaScript', `
-    (function () {
-      var left = 0
-      var right = 0
-      var isInFrame = false;
-      
-      var n = document.elementFromPoint(${e.clientX}, ${e.clientY})
-      while (n) {
-        if (n.tagName === 'IFRAME') {
-          isInFrame = true;
-        }
-        if (n.scrollLeft !== undefined) {
-            left = Math.max(left, n.scrollLeft)
-            right = Math.max(right, n.scrollWidth - n.clientWidth - n.scrollLeft)
-        }
-        n = n.parentElement
-      }  
-      return {left, right, isInFrame}
-    })()
-    `, function (err, result) {
-      if (err) {
-        console.warn(err)
-        return
-      }
-      if (beginningScrollLeft === null || beginningScrollRight === null) {
-        beginningScrollLeft = result.left
-        beginningScrollRight = result.right
-      }
-      isInFrame = isInFrame || result.isInFrame
-    })
-  }
-
   if (initialZoomKeyState === null) {
     initialZoomKeyState = platformZoomKey
   }
@@ -181,16 +166,28 @@ webviews.bindIPC('wheel-event', function (tabId, e) {
     initialSecondaryKeyState = platformSecondaryKey
   }
 
-  if (Math.abs(e.deltaX) >= 20 || Math.abs(e.deltaY) >= 20) {
+  if (Math.abs(e.deltaX) >= 10 || Math.abs(e.deltaY) >= 10) {
     clearTimeout(swipeGestureLowVelocityTimeout)
     swipeGestureLowVelocityTimeout = setTimeout(onSwipeGestureLowVelocity, swipeGestureVelocityDelay)
 
-    if (horizontalMouseMove < -150 && Math.abs(horizontalMouseMove / verticalMouseMove) > 2.5 && !hasShownSwipeArrow) {
-      hasShownSwipeArrow = true
-      webviewGestures.showBackArrow()
-    } else if (horizontalMouseMove > 150 && Math.abs(horizontalMouseMove / verticalMouseMove) > 2.5 && !hasShownSwipeArrow) {
-      hasShownSwipeArrow = true
-      webviewGestures.showForwardArrow()
+    const absRatio = Math.abs(horizontalMouseMove / (verticalMouseMove || 1))
+    if (horizontalMouseMove < -40 && absRatio > 1.0 && !hasShownSwipeArrow) {
+      webviews.callAsync(tabs.getSelected(), 'canGoBack', function (err, canGoBack) {
+        var selectedIndex = tabs.getIndex(tabs.getSelected())
+        if (canGoBack || selectedIndex > 0) {
+          hasShownSwipeArrow = true
+          webviewGestures.showBackArrow()
+        }
+      })
+    } else if (horizontalMouseMove > 40 && absRatio > 1.0 && !hasShownSwipeArrow) {
+      webviews.callAsync(tabs.getSelected(), 'canGoForward', function (err, canGoForward) {
+        var allTabs = tabs.get()
+        var selectedIndex = tabs.getIndex(tabs.getSelected())
+        if (canGoForward || (selectedIndex >= 0 && selectedIndex < allTabs.length - 1)) {
+          hasShownSwipeArrow = true
+          webviewGestures.showForwardArrow()
+        }
+      })
     }
   }
 
@@ -200,7 +197,6 @@ webviews.bindIPC('wheel-event', function (tabId, e) {
   swipeGestureScrollResetTimeout = setTimeout(resetScrollCounters, swipeGestureScrollDelay)
 
   /* cmd-key while scrolling should zoom in and out */
-
   if (platformZoomKey && initialZoomKeyState) {
     if (verticalMouseMove > 50) {
       verticalMouseMove = -10
@@ -212,6 +208,17 @@ webviews.bindIPC('wheel-event', function (tabId, e) {
       webviewGestures.zoomWebviewIn(tabs.getSelected())
     }
   }
+}
+
+webviews.bindIPC('wheel-event', function (tabId, e) {
+  handleWheel(JSON.parse(e))
 })
+
+window.addEventListener('wheel', function (e) {
+  // Catch wheel events directly on the main window DOM (e.g. New Tab Page)
+  if (document.body.classList.contains('is-ntp') || e.target.closest('#webviews') || e.target.closest('#navbar')) {
+    handleWheel(e)
+  }
+}, { passive: true })
 
 module.exports = webviewGestures
