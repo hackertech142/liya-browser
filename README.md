@@ -4,14 +4,16 @@
 
   # Liya Browser 2.0
   
+  ### **Created & Developed by Navraj Singh Momi**
+  
   **A fast, modern, sleek, and private Chromium-based web browser.**  
-  *Engineered for speed, privacy, and distraction-free productivity.*
+  *Engineered from the ground up for speed, privacy, and distraction-free productivity.*
 
   <p align="center">
+    <a href="https://github.com/hackertech142"><img src="https://img.shields.io/badge/Made%20By-Navraj%20Singh%20Momi-10b981.svg?style=for-the-badge&logo=github" alt="Made by Navraj Singh Momi"></a>
     <a href="https://github.com/hackertech142/liya-browser/releases"><img src="https://img.shields.io/badge/version-2.0.0-blue.svg?style=for-the-badge&logo=electron" alt="Version 2.0.0"></a>
     <a href="LICENSE.txt"><img src="https://img.shields.io/badge/License-Apache%202.0-green.svg?style=for-the-badge" alt="License Apache 2.0"></a>
     <img src="https://img.shields.io/badge/Platform-Windows%20%7C%20macOS%20%7C%20Linux-orange.svg?style=for-the-badge" alt="Platforms">
-    <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=for-the-badge" alt="PRs Welcome">
   </p>
 
 </div>
@@ -20,7 +22,18 @@
 
 ## 🌟 Overview
 
-**Liya Browser** is a next-generation web browser combining modern aesthetics with privacy-first architecture. Inspired by minimalist design languages (Safari, Arc), Liya strips away unnecessary browser bloat to give you ultra-low memory usage, blazing page-load times, and an intuitive, customizable user interface.
+**Liya Browser** is a next-generation web browser created and architected by **Navraj Singh Momi**. Combining modern aesthetics with privacy-first architecture, it strips away unnecessary bloat to give users ultra-low memory usage, blazing page-load times, and an intuitive, customizable user interface.
+
+---
+
+## 👨‍💻 Author & Creator
+
+| Developer | Role | GitHub Profile | Project Repository |
+|:---|:---|:---|:---|
+| **Navraj Singh Momi** | Lead Developer & Creator | [@hackertech142](https://github.com/hackertech142) | [hackertech142/liya-browser](https://github.com/hackertech142/liya-browser) |
+
+> *"Built with a vision to deliver a blazingly fast, privacy-focused, and distraction-free browser crafted for high productivity and minimalist elegance."*  
+> — **Navraj Singh Momi**
 
 ---
 
@@ -159,6 +172,9 @@ Feel free to open an issue or submit a Pull Request:
 Liya Browser is open-source software licensed under the **Apache License 2.0**.  
 See the [LICENSE.txt](LICENSE.txt) file for details.
 
+---
+
 <div align="center">
-  <sub>Made with ❤️ by <a href="https://github.com/hackertech142">hackertech142</a> and contributors.</sub>
+  <h3>Made with ❤️ by <a href="https://github.com/hackertech142">Navraj Singh Momi</a></h3>
+  <p><sub>Copyright © 2026 Navraj Singh Momi. All rights reserved.</sub></p>
 </div>
